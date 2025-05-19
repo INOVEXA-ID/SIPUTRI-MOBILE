@@ -38,7 +38,7 @@ class LoginForm extends StatelessWidget {
                         : Text('Login'),
               ),
               if (state.isFailure)
-                Text('Login gagal', style: TextStyle(color: Colors.red)),
+                Text('Login gagallll', style: TextStyle(color: Colors.red)),
               if (state.isSuccess)
                 Text('Login berhasil', style: TextStyle(color: Colors.green)),
             ],
