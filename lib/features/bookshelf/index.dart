@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:siputri_mobile/features/bookshelf/bloc/tab_bloc.dart';
+import './export/index.dart';
 
 class BookshelfScreen extends StatelessWidget {
   const BookshelfScreen({super.key});
@@ -37,14 +35,14 @@ class BookshelfScreen extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      _buildTab(
+                      buildTab(
                         context,
                         index: 0,
                         icon: Icons.menu_book_rounded,
                         label: 'Sedang Dibaca',
                         selected: selectedIndex == 0,
                       ),
-                      _buildTab(
+                      buildTab(
                         context,
                         index: 1,
                         icon: Icons.book_rounded,
@@ -58,56 +56,46 @@ class BookshelfScreen extends StatelessWidget {
             ),
           ),
         ),
-        body: BlocBuilder<TabBloc, TabState>(
-          builder: (context, state) {
-            final selectedIndex =
-                state is TabChangeState ? state.selectedIndex : 0;
-            // Ganti tampilan berdasarkan tab yang aktif
-            switch (selectedIndex) {
-              case 0:
-                return Text("Sedang Dibaca"); // Widget buatan kamu
-              case 1:
-                return Text("Riwayat"); // Widget buatan kamu
-              default:
-                return Container(); // Fallback
-            }
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTab(
-    BuildContext context, {
-    required int index,
-    required IconData icon,
-    required String label,
-    required bool selected,
-  }) {
-    final color = selected ? Colors.blue : Colors.grey;
-
-    return Expanded(
-      child: InkWell(
-        onTap: () {
-          context.read<TabBloc>().add(ChangeTab(index));
-        },
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, color: color),
-            const SizedBox(height: 4),
-            Text(label, style: TextStyle(color: color, fontSize: 13)),
-            if (selected)
-              Container(
-                margin: const EdgeInsets.only(top: 6),
-                height: 3,
-                width: 30,
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-              ),
-          ],
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+          child: BlocBuilder<TabBloc, TabState>(
+            builder: (context, state) {
+              final selectedIndex =
+                  state is TabChangeState ? state.selectedIndex : 0;
+              switch (selectedIndex) {
+                case 0:
+                  return ListView.builder(
+                    itemCount: 4,
+                    shrinkWrap: true,
+                    physics: AlwaysScrollableScrollPhysics(
+                      parent: BouncingScrollPhysics(),
+                    ),
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 7),
+                        child: CardItemRead(),
+                      );
+                    },
+                  );
+                case 1:
+                  return ListView.builder(
+                    itemCount: 4,
+                    shrinkWrap: true,
+                    physics: AlwaysScrollableScrollPhysics(
+                      parent: BouncingScrollPhysics(),
+                    ),
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 7),
+                        child: CardItemHistory(),
+                      );
+                    },
+                  );
+                default:
+                  return Container();
+              }
+            },
+          ),
         ),
       ),
     );

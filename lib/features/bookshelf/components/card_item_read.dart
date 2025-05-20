@@ -1,7 +1,7 @@
 import '../export/index.dart';
 
-class CardItems extends StatelessWidget {
-  const CardItems({super.key});
+class CardItemRead extends StatelessWidget {
+  const CardItemRead({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -85,41 +85,73 @@ class CardItems extends StatelessWidget {
             ),
             Gap(Y: 6),
             Divider(thickness: 2, color: Colors.white),
-            Gap(Y: 6),
+            Gap(Y: 3),
+            MyText(
+              title: "18 Mei 2025",
+              fontSize: 10,
+              maxLine: 5,
+              color: Colors.grey.shade600,
+              fontWeight: FontWeight.w600,
+            ),
+            Row(
+              children: [
+                MyText(
+                  title: "Berlaku sampai 20 Mei 2025 23:59",
+                  fontSize: 10,
+                  maxLine: 5,
+                  color: Colors.grey.shade600,
+                  fontWeight: FontWeight.w500,
+                ),
+                Gap(X: 5),
+                MyText(
+                  title: "(2 Hari lagi)",
+                  fontSize: 10,
+                  maxLine: 5,
+                  color: ColorConstants.primaryColor,
+                  fontWeight: FontWeight.w500,
+                ),
+              ],
+            ),
+            Gap(Y: 3),
+            Divider(thickness: 2, color: Colors.white),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 MyText(
-                  title: "0",
-                  icon: Icons.chat_outlined,
-                  addIcon: true,
-                  sizeIcon: 20,
-                  colorIcon: Colors.amber.shade700,
+                  title: "Belum di baca",
+                  fontSize: 10,
+                  maxLine: 5,
+                  color: Colors.amber.shade800,
+                  fontWeight: FontWeight.w600,
                 ),
-                Container(width: 1.5, height: 20, color: Colors.grey),
-                MyText(
-                  title: "0",
-                  icon: Icons.menu_book_rounded,
-                  addIcon: true,
-                  sizeIcon: 20,
-                  colorIcon: ColorConstants.primaryColor,
-                ),
-                Container(width: 1.5, height: 20, color: Colors.grey),
-                MyText(
-                  title: "0",
-                  icon: Icons.copy_rounded,
-                  addIcon: true,
-                  sizeIcon: 20,
-                  colorIcon: Colors.grey,
-                ),
-                Container(width: 1.5, height: 20, color: Colors.grey),
-                MyText(
-                  title: "0 Tersedia",
-                  fontSize: 11,
-                  icon: Icons.check_circle_outline,
-                  addIcon: true,
-                  sizeIcon: 20,
-                  colorIcon: Colors.black,
+                Material(
+                  borderOnForeground: true,
+                  child: InkWell(
+                    onTap: () {
+                      debugPrint("Baca");
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 15,
+                          vertical: 7,
+                        ),
+                        child: Center(
+                          child: MyText(
+                            title: "Baca",
+                            fontSize: 10,
+                            maxLine: 5,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),

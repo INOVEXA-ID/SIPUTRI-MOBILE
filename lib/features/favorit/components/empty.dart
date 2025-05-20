@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:siputri_mobile/core/constants/color_constants.dart';
-import 'package:siputri_mobile/core/widgets/my_text.dart';
+import '../export/index.dart';
 
 class FavoritEmpty extends StatelessWidget {
   const FavoritEmpty({super.key});
