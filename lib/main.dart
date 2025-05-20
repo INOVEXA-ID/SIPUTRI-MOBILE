@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -35,10 +36,7 @@ class MyApp extends StatelessWidget {
       ),
       home: BlocProvider(
         create: (_) => LoginBloc(),
-        child: Scaffold(
-          appBar: AppBar(title: const Text("login")),
-          body: LoginForm(),
-        ),
+        child: Scaffold(body: LoginForm()),
       ),
     );
   }
