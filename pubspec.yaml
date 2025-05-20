@@ -36,6 +36,9 @@ dependencies:
   cupertino_icons: ^1.0.8
 
   flutter_bloc: ^8.1.3
+  intl: ^0.20.2
+  google_fonts: ^6.2.1
+  google_nav_bar: ^5.0.7
 
 dev_dependencies:
   flutter_test:
@@ -63,6 +66,8 @@ flutter:
     - lib/assets/logo_fix.png
     - lib/assets/logo_polije_biru.png
     - lib/assets/logo_polije_sip.png
+    - assets/images/
+  #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
