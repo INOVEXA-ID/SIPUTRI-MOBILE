@@ -32,7 +32,7 @@ class AppRouter {
           builder:
               (context) => BlocProvider(
                 create: (_) => NavigationBloc(),
-                child: const NavigationBarPage(),
+                child: NavigationBarPage(),
               ),
         );
       default:

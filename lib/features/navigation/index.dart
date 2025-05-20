@@ -2,19 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:siputri_mobile/core/constants/color_constants.dart';
+import 'package:siputri_mobile/features/bookshelf/index.dart';
 import 'package:siputri_mobile/features/favorit/index.dart';
 import 'package:siputri_mobile/features/home/index.dart';
 import 'package:siputri_mobile/features/navigation/bloc/navigation_bloc.dart';
 import 'package:siputri_mobile/features/search/index.dart';
 
 class NavigationBarPage extends StatelessWidget {
-  const NavigationBarPage({super.key});
+  NavigationBarPage({super.key});
 
-  final List<Widget> _pages = const [
+  final List<Widget> _pages = [
     HomeScreen(),
     SearchScreen(),
     FavoritScreen(),
-    Text('Profile'),
+    BookshelfScreen(),
   ];
 
   @override
