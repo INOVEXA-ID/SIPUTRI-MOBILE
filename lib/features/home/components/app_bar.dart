@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:siputri_mobile/core/constants/color_constants.dart';
 import 'package:siputri_mobile/core/widgets/gap.dart';
 import 'package:siputri_mobile/core/widgets/my_text.dart';
+import 'package:siputri_mobile/profile/profile_screen.dart';
 
 class AppBarHome extends StatelessWidget {
   const AppBarHome({super.key});
@@ -19,20 +20,30 @@ class AppBarHome extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                ),
-                child: Center(
-                  child: MyText(
-                    title: "KR",
-                    color: ColorConstants.primaryColor,
-                    textAlign: TextAlign.center,
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ProfileScreen(),
+                    ),
+                  );
+                },
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
+                  child: Center(
+                    child: MyText(
+                      title: "KR",
+                      color: ColorConstants.primaryColor,
+                      textAlign: TextAlign.center,
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
