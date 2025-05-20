@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:siputri_mobile/core/constants/color_constants.dart';
+import 'package:siputri_mobile/features/favorit/index.dart';
 import 'package:siputri_mobile/features/home/index.dart';
 import 'package:siputri_mobile/features/navigation/bloc/navigation_bloc.dart';
+import 'package:siputri_mobile/features/search/index.dart';
 
 class NavigationBarPage extends StatelessWidget {
   const NavigationBarPage({super.key});
 
   final List<Widget> _pages = const [
     HomeScreen(),
-    Text('Cari'),
-    Text('Favorit'),
+    SearchScreen(),
+    FavoritScreen(),
     Text('Profile'),
   ];
 
@@ -34,8 +36,8 @@ class NavigationBarPage extends StatelessWidget {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.1),
-                  spreadRadius: 5,
+                  color: Colors.grey.shade400,
+                  spreadRadius: 1,
                   blurRadius: 7,
                   offset: Offset(0, 3),
                 ),
@@ -58,10 +60,10 @@ class NavigationBarPage extends StatelessWidget {
               duration: Duration(milliseconds: 500),
               tabMargin: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
               tabs: [
-                GButton(icon: Icons.home, text: 'Home'),
+                GButton(icon: Icons.menu_book, text: 'Koleksi'),
                 GButton(icon: Icons.search, text: 'Cari'),
                 GButton(icon: Icons.favorite_border, text: 'Favorit'),
-                GButton(icon: Icons.person, text: 'Profile'),
+                GButton(icon: Icons.library_books, text: 'Bookshelf'),
               ],
             ),
           ),
