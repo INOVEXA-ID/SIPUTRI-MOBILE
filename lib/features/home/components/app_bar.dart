@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:siputri_mobile/core/constants/color_constants.dart';
+import 'package:siputri_mobile/core/widgets/gap.dart';
+import 'package:siputri_mobile/core/widgets/my_text.dart';
 
 class AppBarHome extends StatelessWidget {
   const AppBarHome({super.key});
@@ -13,38 +16,66 @@ class AppBarHome extends StatelessWidget {
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Halo, Kristopher!',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 4),
-          const Text(
-            'Mau baca buku apa hari ini?',
-            style: TextStyle(color: Colors.white70, fontSize: 14),
-          ),
-          const SizedBox(height: 12),
-          Container(
-            height: 45,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(24),
-            ),
-            child: const Row(
-              children: [
-                Icon(Icons.search, color: Colors.grey),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    "Cari buku",
-                    style: TextStyle(color: Colors.grey),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                ),
+                child: Center(
+                  child: MyText(
+                    title: "KR",
+                    color: ColorConstants.primaryColor,
+                    textAlign: TextAlign.center,
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ],
+              ),
+              Gap(X: 10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Halo, Kristopher!',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 19,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  const Text(
+                    'Mau baca buku apa hari ini?',
+                    style: TextStyle(color: Colors.white70, fontSize: 14),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          SizedBox(
+            height: 40,
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'Cari buku',
+                prefixIcon: const Icon(
+                  Icons.search,
+                  color: Colors.grey,
+                  size: 20,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide.none,
+                ),
+                filled: true,
+                fillColor: Colors.white,
+                contentPadding: const EdgeInsets.symmetric(vertical: 0),
+              ),
             ),
           ),
         ],

@@ -16,7 +16,7 @@ class SplashScreen extends StatelessWidget {
           if (state.isLogedIn) {
             Navigator.pushNamedAndRemoveUntil(
               context,
-              AppRouter.homeScreen,
+              AppRouter.navigationBarPage,
               (route) => false,
             );
           } else {
