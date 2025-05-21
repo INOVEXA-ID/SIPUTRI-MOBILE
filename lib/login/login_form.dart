@@ -143,7 +143,7 @@ class _LoginFormState extends State<LoginForm> {
                     ),
                   ],
                 ),
-                SizedBox(height: 250),
+                SizedBox(height: 180),
                 Text(
                   "Oleh:",
                   style: TextStyle(fontWeight: FontWeight.normal, fontSize: 12),

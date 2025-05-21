@@ -9,7 +9,11 @@ class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Form Registrasi'), centerTitle: true),
+      appBar: AppBar(
+        title: const Text('Form Registrasi'),
+        centerTitle: true,
+        backgroundColor: Colors.blue,
+      ),
       body: BlocProvider(
         create: (_) => RegisterBloc(),
         child: const RegisterForm(),
