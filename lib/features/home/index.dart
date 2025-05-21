@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:siputri_mobile/core/config/app_router.dart';
 import 'package:siputri_mobile/core/widgets/gap.dart';
 import 'package:siputri_mobile/features/home/components/app_bar.dart';
 import 'package:siputri_mobile/features/home/components/book_card.dart';
@@ -39,7 +40,14 @@ class HomeScreen extends StatelessWidget {
                 ),
                 itemCount: 10,
                 itemBuilder: (context, index) {
-                  return BookCard();
+                  return InkWell(
+                    onTap:
+                        () => Navigator.pushNamed(
+                          context,
+                          AppRouter.pdfRenderPage,
+                        ),
+                    child: BookCard(),
+                  );
                 },
               ),
             ),
