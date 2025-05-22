@@ -43,6 +43,7 @@ dependencies:
   shared_preferences: ^2.5.3
 
   image_picker: ^1.0.7
+  flutter_dotenv: ^5.2.1
 
 dev_dependencies:
   flutter_test:
@@ -67,12 +68,9 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - lib/assets/logo_fix.png
-    - lib/assets/logo_polije_biru.png
-    - lib/assets/logo_polije_sip.png
-    - lib/assets/foto_kristo.JPG
     - assets/images/
     - assets/pdf/
+    - .env
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
