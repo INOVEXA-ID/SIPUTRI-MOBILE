@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:siputri_mobile/core/services/dio_client.dart';
 import 'package:siputri_mobile/features/auth/screens/index.dart';
 import 'package:siputri_mobile/features/home/index.dart';
 import 'package:siputri_mobile/features/navigation/bloc/navigation_bloc.dart';
 import 'package:siputri_mobile/features/navigation/index.dart';
 import 'package:siputri_mobile/features/pdf_render/index.dart';
+import 'package:siputri_mobile/features/register/bloc/register_bloc.dart';
+import 'package:siputri_mobile/features/register/repositories/register_repository.dart';
 import 'package:siputri_mobile/features/register/screens/index.dart';
 import 'package:siputri_mobile/features/splash/bloc/splash_bloc.dart';
 import 'package:siputri_mobile/features/splash/screens/index.dart';
@@ -42,7 +45,13 @@ class AppRouter {
       case pdfRenderPage:
         return MaterialPageRoute(builder: (context) => const PDFRenderScreen());
       case registerScreen:
-        return MaterialPageRoute(builder: (context) => const RegisterScreen());
+        return MaterialPageRoute(
+          builder:
+              (context) => BlocProvider(
+                create: (_) => RegisterBloc(AuthRepository(DioClient())),
+                child: RegisterScreen(),
+              ),
+        );
       default:
         return MaterialPageRoute(
           builder:

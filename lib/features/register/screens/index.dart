@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:siputri_mobile/features/register/bloc/register_bloc.dart';
 import 'package:siputri_mobile/features/register/components/form.dart';
 
 class RegisterScreen extends StatelessWidget {
@@ -14,10 +12,7 @@ class RegisterScreen extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.blue,
       ),
-      body: BlocProvider(
-        create: (_) => RegisterBloc(),
-        child: const RegisterForm(),
-      ),
+      body: const RegisterForm(),
     );
   }
 }
