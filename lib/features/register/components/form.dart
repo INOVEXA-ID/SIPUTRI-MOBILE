@@ -242,19 +242,6 @@ class _RegisterFormState extends State<RegisterForm> {
                             (state is RegisterLoading)
                                 ? null
                                 : () {
-                                  log(
-                                    {
-                                      'nim': _nimController.text,
-                                      'nama': _namaController.text,
-                                      'jenis_kelamin': jenisKelamin,
-                                      'telepon': _noTelpController.text,
-                                      'alamat': _alamatController.text,
-                                      'email': _emailController.text,
-                                      'password': _passwordController.text,
-                                      'password_confirmation':
-                                          _passwordConfirmationController.text,
-                                    }.toString(),
-                                  );
                                   if (_formKey.currentState!.validate()) {
                                     context.read<RegisterBloc>().add(
                                       RegisterSubmitted(

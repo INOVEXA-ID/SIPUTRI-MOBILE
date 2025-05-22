@@ -4,10 +4,10 @@ import 'package:dio/dio.dart';
 import 'package:siputri_mobile/core/constants/api_constants.dart';
 import 'package:siputri_mobile/core/services/dio_client.dart';
 
-class AuthRepository {
+class RegisterRepository {
   final DioClient dioClient;
 
-  AuthRepository(this.dioClient);
+  RegisterRepository(this.dioClient);
 
   Future<void> register({
     required String nim,
@@ -41,7 +41,9 @@ class AuthRepository {
       if (e is DioException) {
         log("Status: ${e.response?.statusCode}");
         log("Data: ${e.response?.data}");
+        throw Exception(e.response?.data['message'] ?? 'Login gagal');
       }
+      throw Exception('Terjadi kesalahan');
     }
   }
 }

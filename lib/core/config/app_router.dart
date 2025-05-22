@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:siputri_mobile/core/services/dio_client.dart';
+import 'package:siputri_mobile/features/auth/bloc/auth_bloc.dart';
+import 'package:siputri_mobile/features/auth/repositories/auth_repository.dart';
 import 'package:siputri_mobile/features/auth/screens/index.dart';
 import 'package:siputri_mobile/features/home/index.dart';
 import 'package:siputri_mobile/features/navigation/bloc/navigation_bloc.dart';
@@ -23,7 +25,13 @@ class AppRouter {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case loginScreen:
-        return MaterialPageRoute(builder: (context) => LoginScreen());
+        return MaterialPageRoute(
+          builder:
+              (context) => BlocProvider(
+                create: (context) => AuthBloc(AuthRepository(DioClient())),
+                child: LoginScreen(),
+              ),
+        );
       case splashScreen:
         return MaterialPageRoute(
           builder:
@@ -48,7 +56,7 @@ class AppRouter {
         return MaterialPageRoute(
           builder:
               (context) => BlocProvider(
-                create: (_) => RegisterBloc(AuthRepository(DioClient())),
+                create: (_) => RegisterBloc(RegisterRepository(DioClient())),
                 child: RegisterScreen(),
               ),
         );

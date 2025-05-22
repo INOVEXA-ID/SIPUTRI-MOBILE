@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:siputri_mobile/core/config/app_router.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:siputri_mobile/core/helper/token_storage.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: ".env");
+  await TokenStorage().init();
   runApp(const MyApp());
 }
 
