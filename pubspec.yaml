@@ -39,6 +39,8 @@ dependencies:
   intl: ^0.20.2
   google_fonts: ^6.2.1
   google_nav_bar: ^5.0.7
+  syncfusion_flutter_pdfviewer: ^29.2.4
+  shared_preferences: ^2.5.3
 
   image_picker: ^1.0.7
 
@@ -70,6 +72,7 @@ flutter:
     - lib/assets/logo_polije_sip.png
     - lib/assets/foto_kristo.JPG
     - assets/images/
+    - assets/pdf/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

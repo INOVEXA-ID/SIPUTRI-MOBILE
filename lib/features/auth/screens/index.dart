@@ -1,27 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:siputri_mobile/core/config/app_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:siputri_mobile/features/auth/components/form.dart';
+import 'package:siputri_mobile/login/login_bloc.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Login Screen")),
-      body: Column(
-        children: [
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                AppRouter.homeScreen,
-                (route) => false,
-              );
-            },
-            child: Text('Login'),
-          ),
-        ],
-      ),
+    return BlocProvider(
+      create: (_) => LoginBloc(),
+      child: Scaffold(appBar: AppBar(title: Text('Login')), body: LoginForm()),
     );
   }
 }
