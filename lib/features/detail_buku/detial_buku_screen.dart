@@ -25,265 +25,259 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          Column(
-            children: [
-              const SizedBox(height: 125),
-              Center(
-                child: Image.asset(
-                  widget.imageAsset,
-                  height: 400,
-                  width: 300,
-                  fit: BoxFit.cover,
+          // Seluruh konten (termasuk gambar) bisa di-scroll
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(height: 125),
+                Center(
+                  child: Image.asset(
+                    widget.imageAsset,
+                    height: 400,
+                    width: 300,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-              Expanded(
-                child: Padding(
+                Padding(
                   padding: const EdgeInsets.all(16),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          widget.title,
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        widget.title,
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
                         ),
-                        const SizedBox(height: 10),
-                        const Text(
-                          "INI PENULIS MISAL KRISTOPIR, ROMA IRAMA",
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        const SizedBox(height: 20),
-
-                        // Rating dan ketersediaan
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: List.generate(5, (index) {
-                                    return const Icon(
-                                      Icons.star,
-                                      color: Colors.amber,
-                                      size: 20,
-                                    );
-                                  }),
-                                ),
-                                const SizedBox(height: 4),
-                                const Text(
-                                  '4.5 Rating',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black54,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              children: const [
-                                Row(
-                                  children: [
-                                    Text(
-                                      '5',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(width: 4),
-                                    Icon(Icons.book, color: Colors.black87),
-                                  ],
-                                ),
-                                SizedBox(height: 4),
-                                Text(
-                                  '5 Tersedia',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black54,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-
-                        const SizedBox(height: 24),
-
-                        // Tombol Pinjam Buku
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              setState(() {
-                                isBorrowed = !isBorrowed;
-                              });
-                            },
-                            icon: Icon(
-                              isBorrowed
-                                  ? Icons.check_circle
-                                  : Icons.amp_stories_outlined,
-                              color: Colors.white,
-                            ),
-                            label: Text(
-                              isBorrowed ? 'Dipinjam' : 'Pinjam Buku',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        "INI PENULIS MISAL KRISTOPIR, ROMA IRAMA",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      const SizedBox(height: 20),
+                      // Rating dan ketersediaan
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: List.generate(5, (index) {
+                                  return const Icon(
+                                    Icons.star,
+                                    color: Colors.amber,
+                                    size: 20,
+                                  );
+                                }),
                               ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              backgroundColor:
-                                  isBorrowed ? Colors.green : Colors.blue,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            _buildStatItem(
-                              Icons.chat_bubble_outline,
-                              '0',
-                              Colors.orange,
-                            ),
-                            _verticalDivider(),
-                            _buildStatItem(Icons.description, '0', Colors.blue),
-                            _verticalDivider(),
-                            _buildStatItem(Icons.copy, '1', Colors.black87),
-                            _verticalDivider(),
-                            Row(
-                              children: const [
-                                Icon(Icons.check_circle, color: Colors.teal),
-                                SizedBox(width: 4),
-                                Text(
-                                  '1 Tersedia',
-                                  style: TextStyle(color: Colors.teal),
+                              const SizedBox(height: 4),
+                              const Text(
+                                '4.5 Rating',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black54,
                                 ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 24),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _isExpanded = !_isExpanded;
-                            });
-                          },
-                          child: Card(
-                            elevation: 2,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: const [
+                              Row(
                                 children: [
-                                  const Text(
-                                    'Deskripsi',
+                                  Text(
+                                    '5',
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  const SizedBox(height: 8),
-                                  const Text(
-                                    'Klik untuk membaca lebih lanjut',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  AnimatedCrossFade(
-                                    duration: const Duration(milliseconds: 300),
-                                    crossFadeState:
-                                        _isExpanded
-                                            ? CrossFadeState.showSecond
-                                            : CrossFadeState.showFirst,
-                                    firstChild: Text(
-                                      widget.description.split('.').first +
-                                          '.', // kalimat awal saja
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(fontSize: 14),
-                                    ),
-                                    secondChild: Text(
-                                      widget.description,
-                                      style: const TextStyle(fontSize: 14),
-                                    ),
-                                  ),
+                                  SizedBox(width: 4),
+                                  Icon(Icons.book, color: Colors.black87),
                                 ],
                               ),
+                              SizedBox(height: 4),
+                              Text(
+                                '5 Tersedia',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+                      // Tombol Pinjam Buku
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            setState(() {
+                              isBorrowed = !isBorrowed;
+                            });
+                          },
+                          icon: Icon(
+                            isBorrowed
+                                ? Icons.check_circle
+                                : Icons.amp_stories_outlined,
+                            color: Colors.white,
+                          ),
+                          label: Text(
+                            isBorrowed ? 'Dipinjam' : 'Pinjam Buku',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            backgroundColor:
+                                isBorrowed ? Colors.green : Colors.blue,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
                             ),
                           ),
                         ),
-                        const SizedBox(height: 24),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              _buildInfoColumn(
-                                title: 'Penulis',
-                                icon: Icons.person,
-                                content: 'kristoper, roma',
-                              ),
-                              _verticalDivider(),
-                              _buildInfoColumn(
-                                title: 'Penerbit',
-                                icon: Icons.business,
-                                content: 'Gramedia Jember',
-                              ),
-                              _verticalDivider(),
-                              _buildInfoColumn(
-                                title: 'ISBN',
-                                icon: Icons.qr_code,
-                                content: '978-602-03-1234-5',
-                              ),
-                              _verticalDivider(),
-                              _buildInfoColumn(
-                                title: 'Tahun',
-                                icon: Icons.calendar_today,
-                                content: '2024',
+                      ),
+                      const SizedBox(height: 24),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _buildStatItem(
+                            Icons.chat_bubble_outline,
+                            '0',
+                            Colors.orange,
+                          ),
+                          _verticalDivider(),
+                          _buildStatItem(Icons.description, '0', Colors.blue),
+                          _verticalDivider(),
+                          _buildStatItem(Icons.copy, '1', Colors.black87),
+                          _verticalDivider(),
+                          Row(
+                            children: const [
+                              Icon(Icons.check_circle, color: Colors.teal),
+                              SizedBox(width: 4),
+                              Text(
+                                '1 Tersedia',
+                                style: TextStyle(color: Colors.teal),
                               ),
                             ],
                           ),
-                        ),
-                        const SizedBox(height: 24),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Apa yang orang lain katakan',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _isExpanded = !_isExpanded;
+                          });
+                        },
+                        child: Card(
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Deskripsi',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 12),
-                              _buildUlasanSection(),
-                            ],
+                                const SizedBox(height: 8),
+                                const Text(
+                                  'Klik untuk membaca lebih lanjut',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                AnimatedCrossFade(
+                                  duration: const Duration(milliseconds: 300),
+                                  crossFadeState:
+                                      _isExpanded
+                                          ? CrossFadeState.showSecond
+                                          : CrossFadeState.showFirst,
+                                  firstChild: Text(
+                                    widget.description.split('.').first + '.',
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(fontSize: 14),
+                                  ),
+                                  secondChild: Text(
+                                    widget.description,
+                                    style: const TextStyle(fontSize: 14),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 24),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            _buildInfoColumn(
+                              title: 'Penulis',
+                              icon: Icons.person,
+                              content: 'kristoper, roma',
+                            ),
+                            _verticalDivider(),
+                            _buildInfoColumn(
+                              title: 'Penerbit',
+                              icon: Icons.business,
+                              content: 'Gramedia Jember',
+                            ),
+                            _verticalDivider(),
+                            _buildInfoColumn(
+                              title: 'ISBN',
+                              icon: Icons.qr_code,
+                              content: '978-602-03-1234-5',
+                            ),
+                            _verticalDivider(),
+                            _buildInfoColumn(
+                              title: 'Tahun',
+                              icon: Icons.calendar_today,
+                              content: '2024',
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Apa yang orang lain katakan',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            _buildUlasanSection(),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-
           // Floating buttons
           Positioned(
             top: 40,

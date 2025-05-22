@@ -20,6 +20,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     text: 'kristopir@example.com',
   );
 
+  final TextEditingController _phoneController = TextEditingController(
+    text: '08123456789',
+  );
+
+  final TextEditingController _addressController = TextEditingController(
+    text: 'Jember',
+  );
+
+  final TextEditingController _passwordController = TextEditingController(
+    text: 'password',
+  );
+
   File? _imageFile;
 
   Future<void> _pickImage(ImageSource source) async {
@@ -146,6 +158,65 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 validator:
                     (value) =>
                         value!.isEmpty ? 'Email tidak boleh kosong' : null,
+              ),
+
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _phoneController,
+                decoration: InputDecoration(
+                  labelText: 'Nomor Telepon',
+                  prefixIcon: const Icon(Icons.phone),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[100],
+                ),
+                keyboardType: TextInputType.phone,
+                validator:
+                    (value) =>
+                        value!.isEmpty
+                            ? 'Nomor Telepon tidak boleh kosong'
+                            : null,
+              ),
+
+              const SizedBox(height: 16),
+
+              // Field Alamat
+              TextFormField(
+                controller: _addressController,
+                decoration: InputDecoration(
+                  labelText: 'Alamat',
+                  prefixIcon: const Icon(Icons.location_on),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[100],
+                ),
+                validator:
+                    (value) =>
+                        value!.isEmpty ? 'Alamat tidak boleh kosong' : null,
+              ),
+
+              const SizedBox(height: 16),
+
+              // Field Password
+              TextFormField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  prefixIcon: const Icon(Icons.lock),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[100],
+                ),
+                validator:
+                    (value) =>
+                        value!.isEmpty ? 'Password tidak boleh kosong' : null,
               ),
 
               const SizedBox(height: 32),

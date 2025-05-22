@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:siputri_mobile/features/auth/components/form.dart';
-import 'package:siputri_mobile/login/login_bloc.dart';
+import '../bloc/auth_bloc.dart';
+import '../data/auth_repository.dart';
+import '../components/form.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -9,8 +10,8 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => LoginBloc(),
-      child: Scaffold(appBar: AppBar(title: Text('Login')), body: LoginForm()),
+      create: (_) => LoginBloc(authRepository: AuthRepository()),
+      child: LoginForm(),
     );
   }
 }
