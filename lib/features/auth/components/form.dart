@@ -113,14 +113,11 @@ class LoginForm extends StatelessWidget {
               children: [
                 Text('Belum punya akun? '),
                 GestureDetector(
-                  onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => const RegisterScreen(),
-                    //   ),
-                    // );
-                  },
+                  onTap:
+                      () => Navigator.pushNamed(
+                        context,
+                        AppRouter.registerScreen,
+                      ),
                   child: Text(
                     'Daftar',
                     style: TextStyle(

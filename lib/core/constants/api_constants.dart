@@ -4,5 +4,6 @@ class ApiConstants {
   static String? baseUrl = dotenv.env['HOST'];
   static String? baseUrlImage = dotenv.env['URL'];
 
-  static String loginEndpoint = '$baseUrl/login-mahasiswa';
+  static String loginEndpoint = '$baseUrl/login';
+  static String registerEndpoint = '$baseUrl/register';
 }

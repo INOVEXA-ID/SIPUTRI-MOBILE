@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'register_bloc.dart';
-import 'register_event.dart';
-import 'register_state.dart';
+import 'package:siputri_mobile/features/register/bloc/register_bloc.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({super.key});
@@ -14,7 +12,7 @@ class RegisterForm extends StatefulWidget {
 class _RegisterFormState extends State<RegisterForm> {
   final _formKey = GlobalKey<FormState>();
 
-  String _password = ''; // simpan password utama
+  String _password = '';
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +35,6 @@ class _RegisterFormState extends State<RegisterForm> {
                     fillColor: Colors.grey[100],
                   ),
                   keyboardType: TextInputType.text,
-                  onChanged:
-                      (value) =>
-                          context.read<RegisterBloc>().add(NimChanged(value)),
                   validator:
                       (value) =>
                           value!.isEmpty ? 'NIM tidak boleh kosong' : null,
@@ -56,9 +51,6 @@ class _RegisterFormState extends State<RegisterForm> {
                     fillColor: Colors.grey[100],
                   ),
                   keyboardType: TextInputType.text,
-                  onChanged:
-                      (value) =>
-                          context.read<RegisterBloc>().add(NamaChanged(value)),
                   validator:
                       (value) =>
                           value!.isEmpty ? 'Nama tidak boleh kosong' : null,
@@ -79,18 +71,15 @@ class _RegisterFormState extends State<RegisterForm> {
                   ),
                   items: const [
                     DropdownMenuItem(
-                      value: 'Laki-laki',
+                      value: 'laki-laki',
                       child: Text('Laki-laki'),
                     ),
                     DropdownMenuItem(
-                      value: 'Perempuan',
+                      value: 'perempuan',
                       child: Text('Perempuan'),
                     ),
                   ],
-                  onChanged:
-                      (value) => context.read<RegisterBloc>().add(
-                        JenisKelaminChanged(value!),
-                      ),
+                  onChanged: (value) {},
                   validator:
                       (value) =>
                           value == null
@@ -109,10 +98,6 @@ class _RegisterFormState extends State<RegisterForm> {
                     fillColor: Colors.grey[100],
                   ),
                   keyboardType: TextInputType.phone,
-                  onChanged:
-                      (value) => context.read<RegisterBloc>().add(
-                        TeleponChanged(value),
-                      ),
                   validator:
                       (value) =>
                           value!.isEmpty
@@ -131,10 +116,6 @@ class _RegisterFormState extends State<RegisterForm> {
                     filled: true,
                     fillColor: Colors.grey[100],
                   ),
-                  onChanged:
-                      (value) => context.read<RegisterBloc>().add(
-                        AlamatChanged(value),
-                      ),
                   validator:
                       (value) =>
                           value!.isEmpty ? 'Alamat tidak boleh kosong' : null,
@@ -152,9 +133,6 @@ class _RegisterFormState extends State<RegisterForm> {
                     fillColor: Colors.grey[100],
                   ),
                   keyboardType: TextInputType.emailAddress,
-                  onChanged:
-                      (value) =>
-                          context.read<RegisterBloc>().add(EmailChanged(value)),
                   validator:
                       (value) =>
                           value!.isEmpty ? 'Email tidak boleh kosong' : null,
@@ -174,7 +152,6 @@ class _RegisterFormState extends State<RegisterForm> {
                   obscureText: true,
                   onChanged: (value) {
                     _password = value;
-                    context.read<RegisterBloc>().add(PasswordChanged(value));
                   },
                   validator:
                       (value) =>
@@ -208,9 +185,9 @@ class _RegisterFormState extends State<RegisterForm> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        context.read<RegisterBloc>().add(RegisterSubmitted());
-                      }
+                      // if (_formKey.currentState!.validate()) {
+                      //   context.read<RegisterBloc>().add(RegisterSubmitted());
+                      // }
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -220,35 +197,12 @@ class _RegisterFormState extends State<RegisterForm> {
                       backgroundColor: Colors.blue[600],
                       elevation: 4,
                     ),
-                    child:
-                        state.isSubmitting
-                            ? SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
-                            )
-                            : const Text(
-                              'Daftar',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                              ),
-                            ),
+                    child: const Text(
+                      'Daftar',
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
                   ),
                 ),
-                if (state.isSuccess)
-                  const Text(
-                    'Registrasi Berhasil!',
-                    style: TextStyle(color: Colors.green),
-                  ),
-                if (state.isFailure)
-                  const Text(
-                    'Registrasi Gagal!',
-                    style: TextStyle(color: Colors.red),
-                  ),
               ],
             ),
           ),
