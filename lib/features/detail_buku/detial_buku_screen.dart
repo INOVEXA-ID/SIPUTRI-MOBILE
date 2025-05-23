@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:siputri_mobile/features/home/models/buku_model.dart';
 
 class BookDetailScreen extends StatefulWidget {
-  final String title;
-  final String description;
-  final String imageAsset;
+  final Datum book;
 
-  const BookDetailScreen({
-    super.key,
-    required this.title,
-    required this.description,
-    required this.imageAsset,
-  });
+  const BookDetailScreen({super.key, required this.book});
 
   @override
   State<BookDetailScreen> createState() => _BookDetailScreenState();
@@ -22,40 +16,58 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final book = widget.book;
     return Scaffold(
-      body: Stack(
-        children: [
-          Column(
-            children: [
-              const SizedBox(height: 125),
-              Center(
-                child: Image.network(
-                  widget.imageAsset,
-                  height: 400,
-                  width: 300,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: SingleChildScrollView(
+      body: SafeArea(
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              padding: EdgeInsets.only(top: 100),
+              child: Column(
+                children: [
+                  Center(
+                    child: Image.network(
+                      book.thumbnail != null && book.thumbnail!.isNotEmpty
+                          ? book.thumbnail!
+                          : "https://via.placeholder.com/180x260",
+                      height: 260,
+                      width: 180,
+                      fit: BoxFit.cover,
+                      errorBuilder:
+                          (context, error, stackTrace) => Container(
+                            height: 260,
+                            width: 180,
+                            color: Colors.grey[300],
+                            child: const Icon(Icons.broken_image, size: 60),
+                          ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 16,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          widget.title,
+                          book.judul ?? '-',
                           style: const TextStyle(
-                            fontSize: 24,
+                            fontSize: 22,
                             fontWeight: FontWeight.bold,
                           ),
+                          textAlign: TextAlign.center,
                         ),
-                        const SizedBox(height: 10),
-                        const Text(
-                          "INI PENULIS MISAL KRISTOPIR, ROMA IRAMA",
-                          style: TextStyle(fontSize: 16),
+                        const SizedBox(height: 8),
+                        Text(
+                          book.penulis ?? '-',
+                          style: const TextStyle(
+                            fontSize: 15,
+                            color: Colors.black54,
+                          ),
                         ),
                         const SizedBox(height: 20),
+
                         // Rating dan ketersediaan
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -83,23 +95,27 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                               ],
                             ),
                             Column(
-                              children: const [
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
                                 Row(
                                   children: [
                                     Text(
-                                      '5',
-                                      style: TextStyle(
+                                      (book.jumlahBuku ?? 0).toString(),
+                                      style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    SizedBox(width: 4),
-                                    Icon(Icons.book, color: Colors.black87),
+                                    const SizedBox(width: 4),
+                                    const Icon(
+                                      Icons.book,
+                                      color: Colors.black87,
+                                    ),
                                   ],
                                 ),
-                                SizedBox(height: 4),
+                                const SizedBox(height: 4),
                                 Text(
-                                  '5 Tersedia',
+                                  '${book.jumlahBuku} Buku Tersedia',
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.black54,
@@ -110,6 +126,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                           ],
                         ),
                         const SizedBox(height: 24),
+
                         // Tombol Pinjam Buku
                         SizedBox(
                           width: double.infinity,
@@ -142,7 +159,9 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                             ),
                           ),
                         ),
+
                         const SizedBox(height: 24),
+                        // Statistik cepat
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -169,12 +188,11 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                           ],
                         ),
                         const SizedBox(height: 24),
+
+                        // Deskripsi expandable
                         GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _isExpanded = !_isExpanded;
-                            });
-                          },
+                          onTap:
+                              () => setState(() => _isExpanded = !_isExpanded),
                           child: Card(
                             elevation: 2,
                             shape: RoundedRectangleBorder(
@@ -193,11 +211,11 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                     ),
                                   ),
                                   const SizedBox(height: 8),
-                                  const Text(
+                                  Text(
                                     'Klik untuk membaca lebih lanjut',
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: Colors.grey,
+                                      color: Colors.grey[600],
                                     ),
                                   ),
                                   const SizedBox(height: 8),
@@ -208,13 +226,13 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                             ? CrossFadeState.showSecond
                                             : CrossFadeState.showFirst,
                                     firstChild: Text(
-                                      '${widget.description.split('.').first}.', // kalimat awal saja
+                                      '${(book.deskripsi ?? '-').split('.').first}.',
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(fontSize: 14),
                                     ),
                                     secondChild: Text(
-                                      widget.description,
+                                      book.deskripsi ?? '-',
                                       style: const TextStyle(fontSize: 14),
                                     ),
                                   ),
@@ -224,6 +242,8 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                           ),
                         ),
                         const SizedBox(height: 24),
+
+                        // Info Book
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Row(
@@ -231,32 +251,34 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                               _buildInfoColumn(
                                 title: 'Penulis',
                                 icon: Icons.person,
-                                content: 'kristoper, roma',
+                                content: book.penulis ?? '-',
                               ),
                               _verticalDivider(),
                               _buildInfoColumn(
                                 title: 'Penerbit',
                                 icon: Icons.business,
-                                content: 'Gramedia Jember',
+                                content: book.penerbit ?? '-',
                               ),
                               _verticalDivider(),
                               _buildInfoColumn(
                                 title: 'ISBN',
                                 icon: Icons.qr_code,
-                                content: '978-602-03-1234-5',
+                                content: book.isbn ?? '-',
                               ),
                               _verticalDivider(),
                               _buildInfoColumn(
                                 title: 'Tahun',
                                 icon: Icons.calendar_today,
-                                content: '2024',
+                                content: book.tahunTerbit ?? '-',
                               ),
                             ],
                           ),
                         ),
                         const SizedBox(height: 24),
+
+                        // Ulasan
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -272,10 +294,23 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                             ],
                           ),
                         ),
+                        const SizedBox(height: 40),
                       ],
                     ),
                   ),
                 ),
+              ),
+            ),
+            // Floating buttons
+            Positioned(
+              top: 20,
+              left: 16,
+              child: FloatingActionButton(
+                mini: true,
+                backgroundColor: Colors.black.withOpacity(0.6),
+                heroTag: 'back',
+                onPressed: () => Navigator.pop(context),
+                child: const Icon(Icons.arrow_back, color: Colors.white),
               ),
             ],
           ),
@@ -290,40 +325,39 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
               onPressed: () => Navigator.pop(context),
               child: const Icon(Icons.arrow_back, color: Colors.white),
             ),
-          ),
-          Positioned(
-            top: 40,
-            right: 70,
-            child: FloatingActionButton(
-              mini: true,
-              backgroundColor: Colors.black.withOpacity(0.6),
-              heroTag: 'share',
-              onPressed: () {
-                // Fungsi share di sini
-              },
-              child: const Icon(Icons.share, color: Colors.white),
+            Positioned(
+              top: 20,
+              right: 70,
+              child: FloatingActionButton(
+                mini: true,
+                backgroundColor: Colors.black.withOpacity(0.6),
+                heroTag: 'share',
+                onPressed: () {
+                  // Fungsi share di sini
+                },
+                child: const Icon(Icons.share, color: Colors.white),
+              ),
             ),
-          ),
-          Positioned(
-            top: 40,
-            right: 16,
-            child: FloatingActionButton(
-              mini: true,
-              backgroundColor: Colors.black.withOpacity(0.6),
-              heroTag: 'favorite',
-              onPressed: () {
-                // Fungsi favorite di sini
-              },
-              child: const Icon(Icons.favorite_border, color: Colors.white),
+            Positioned(
+              top: 20,
+              right: 16,
+              child: FloatingActionButton(
+                mini: true,
+                backgroundColor: Colors.black.withOpacity(0.6),
+                heroTag: 'favorite',
+                onPressed: () {
+                  // Fungsi favorite di sini
+                },
+                child: const Icon(Icons.favorite_border, color: Colors.white),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
-// Helper widgets (tidak berubah)
 Widget _verticalDivider() {
   return Container(
     height: 30,
@@ -370,32 +404,31 @@ Widget _buildInfoColumn({
 }
 
 Widget _buildUlasanSection() {
-  // Contoh data ulasan, bisa diganti dengan data asli
-  final List<String> ulasan = []; // Kosong = tidak ada ulasan
-
+  final List<String> ulasan = [];
   if (ulasan.isEmpty) {
     return const Text(
       'Belum ada ulasan',
       style: TextStyle(fontSize: 14, color: Colors.black54),
     );
   }
-
   return Column(
     children:
-        ulasan.map((review) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.grey.shade300),
+        ulasan
+            .map(
+              (review) => Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade100,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.grey.shade300),
+                  ),
+                  child: Text(review, style: const TextStyle(fontSize: 14)),
+                ),
               ),
-              child: Text(review, style: const TextStyle(fontSize: 14)),
-            ),
-          );
-        }).toList(),
+            )
+            .toList(),
   );
 }
