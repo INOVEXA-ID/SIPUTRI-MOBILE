@@ -21,7 +21,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
           password: event.password,
           passwordConfirmation: event.passwordConfirmation,
         );
-        emit(RegisterSuccess());
+        emit(RegisterSuccess("Berhasil register"));
       } catch (e) {
         emit(RegisterFailure(e.toString()));
       }
