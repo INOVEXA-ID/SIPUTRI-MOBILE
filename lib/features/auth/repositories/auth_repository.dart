@@ -22,8 +22,7 @@ class AuthRepository {
         final token = response.data['token'];
         final user = User.fromJson(response.data['user']);
         await TokenStorage().saveToken(token); // simpan token
-        await TokenStorage().saveUser(user);
-        await TokenStorage().saveToken(token); // simpan token
+        await TokenStorage().saveUser(user); // simpan token
       } else {
         throw Exception('Login gagal');
       }

@@ -9,6 +9,7 @@ import 'package:siputri_mobile/core/helper/user_model.dart';
 import 'package:siputri_mobile/edit_profile/bloc/edit_profile_bloc.dart';
 import 'package:siputri_mobile/edit_profile/bloc/edit_profile_event.dart';
 import 'package:siputri_mobile/edit_profile/bloc/edit_profile_state.dart';
+import 'package:siputri_mobile/core/config/app_router.dart'; // Tambahkan ini
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -130,7 +131,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Profil berhasil diperbarui')),
             );
-            Navigator.pop(context);
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              AppRouter.homeScreen,
+              (route) => false,
+            );
           } else if (state is EditProfileFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Gagal update profil: ${state.message}')),
