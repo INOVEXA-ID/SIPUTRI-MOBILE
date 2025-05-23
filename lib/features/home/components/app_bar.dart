@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:siputri_mobile/core/constants/color_constants.dart';
 import 'package:siputri_mobile/core/widgets/gap.dart';
 import 'package:siputri_mobile/core/widgets/my_text.dart';
+import 'package:siputri_mobile/features/navigation/bloc/navigation_bloc.dart';
 import 'package:siputri_mobile/profile/profile_screen.dart';
 
 class AppBarHome extends StatelessWidget {
@@ -9,6 +11,8 @@ class AppBarHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController searchController = TextEditingController();
+
     return AppBar(
       automaticallyImplyLeading: false,
       backgroundColor: Colors.blue.shade700,
@@ -72,6 +76,13 @@ class AppBarHome extends StatelessWidget {
           SizedBox(
             height: 40,
             child: TextField(
+              controller: searchController,
+              onSubmitted: (value) {
+                context.read<NavigationBloc>().add(ChangeTab(1));
+
+                // 2. Kirim query ke SearchBloc (pastikan SearchScreen-nya ada BlocProvider)
+                // context.read<SearchBloc>().add(SearchTextSubmitted(value));
+              },
               decoration: InputDecoration(
                 hintText: 'Cari buku',
                 prefixIcon: const Icon(

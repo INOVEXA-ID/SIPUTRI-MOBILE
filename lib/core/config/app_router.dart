@@ -15,6 +15,8 @@ import 'package:siputri_mobile/features/pdf_render/index.dart';
 import 'package:siputri_mobile/features/register/bloc/register_bloc.dart';
 import 'package:siputri_mobile/features/register/repositories/register_repository.dart';
 import 'package:siputri_mobile/features/register/screens/index.dart';
+import 'package:siputri_mobile/features/search/bloc/buku_search_bloc.dart';
+import 'package:siputri_mobile/features/search/repositories/buku_search_repository.dart';
 import 'package:siputri_mobile/features/splash/bloc/splash_bloc.dart';
 import 'package:siputri_mobile/features/splash/screens/index.dart';
 
@@ -57,6 +59,11 @@ class AppRouter {
                         (context) =>
                             BukuBloc(BukuRepository(DioClient()))
                               ..add(LoadBuku()),
+                  ),
+                  BlocProvider(
+                    create:
+                        (context) =>
+                            BukuSearchBloc(BukuSearchRepository(DioClient())),
                   ),
                   BlocProvider(
                     create:
