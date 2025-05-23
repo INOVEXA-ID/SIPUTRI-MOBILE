@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:developer';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:siputri_mobile/features/register/bloc/register_bloc.dart';
 
 class RegisterForm extends StatefulWidget {
@@ -12,6 +15,7 @@ class RegisterForm extends StatefulWidget {
 class _RegisterFormState extends State<RegisterForm> {
   final _formKey = GlobalKey<FormState>();
   String _password = '';
+
   final _nimController = TextEditingController();
   final _namaController = TextEditingController();
   final _noTelpController = TextEditingController();
@@ -19,7 +23,10 @@ class _RegisterFormState extends State<RegisterForm> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _passwordConfirmationController = TextEditingController();
+
   String? jenisKelamin;
+  bool _passwordVisible = false;
+  bool _passwordConfirmationVisible = false;
 
   @override
   void dispose() {
@@ -290,6 +297,25 @@ class _RegisterFormState extends State<RegisterForm> {
           ),
         );
       },
+    );
+  }
+
+  InputDecoration _inputDecoration({
+    required String label,
+    required IconData icon,
+    String? hint,
+    Widget? suffixIcon,
+  }) {
+    return InputDecoration(
+      labelText: label,
+      hintText: hint,
+      prefixIcon: Icon(icon, color: Colors.blue[700]),
+      suffixIcon: suffixIcon,
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(13)),
+      filled: true,
+      fillColor: Colors.grey[100],
+      contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+      floatingLabelBehavior: FloatingLabelBehavior.auto,
     );
   }
 }

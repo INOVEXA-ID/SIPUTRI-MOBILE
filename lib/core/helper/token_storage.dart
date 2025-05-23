@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:siputri_mobile/core/helper/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TokenStorage {
@@ -23,7 +27,18 @@ class TokenStorage {
 
   Future<void> clearToken() async {
     await _prefs?.remove('token');
+    await _prefs?.remove('user');
   }
 
   bool get isLoggedIn => token != null;
+  Future<void> saveUser(User user) async {
+    final userJson = jsonEncode(user.toJson());
+    await _prefs?.setString('user', userJson);
+  }
+
+  User? get user {
+    final userStr = _prefs?.getString('user');
+    if (userStr == null) return null;
+    return User.fromJson(jsonDecode(userStr));
+  }
 }

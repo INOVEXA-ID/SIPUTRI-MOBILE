@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:siputri_mobile/core/constants/color_constants.dart';
+import 'package:siputri_mobile/core/helper/token_storage.dart';
 import 'package:siputri_mobile/core/widgets/gap.dart';
 import 'package:siputri_mobile/core/widgets/my_text.dart';
+import 'package:siputri_mobile/core/widgets/user_avatar.dart';
+import 'package:siputri_mobile/profile/bloc/profile_bloc.dart';
 import 'package:siputri_mobile/features/navigation/bloc/navigation_bloc.dart';
 import 'package:siputri_mobile/features/search/bloc/buku_search_bloc.dart';
 import 'package:siputri_mobile/profile/profile_screen.dart';
@@ -12,6 +15,7 @@ class AppBarHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = TokenStorage().user;
     final TextEditingController searchController = TextEditingController();
 
     return AppBar(
@@ -30,34 +34,22 @@ class AppBarHome extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const ProfileScreen(),
+                      builder:
+                          (context) => BlocProvider(
+                            create: (context) => ProfileBloc(),
+                            child: const ProfileScreen(),
+                          ),
                     ),
                   );
                 },
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white,
-                  ),
-                  child: Center(
-                    child: MyText(
-                      title: "KR",
-                      color: ColorConstants.primaryColor,
-                      textAlign: TextAlign.center,
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+                child: UserAvatar(size: 40),
               ),
               Gap(X: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Halo, Kristopher!',
+                  Text(
+                    'Halo, ${user?.nama}!',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 19,

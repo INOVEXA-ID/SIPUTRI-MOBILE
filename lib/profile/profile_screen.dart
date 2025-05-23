@@ -1,8 +1,39 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:siputri_mobile/core/constants/api_constants.dart';
+import 'package:siputri_mobile/core/helper/token_storage.dart';
+import 'package:siputri_mobile/edit_profile/bloc/edit_profile_bloc.dart';
 import 'package:siputri_mobile/edit_profile/edit_profile_screen.dart';
+import 'package:siputri_mobile/edit_profile/repositories/profile_repository.dart';
+import 'package:siputri_mobile/profile/bloc/profile_bloc.dart'; // pastikan path-nya benar
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<ProfileBloc>().add(LoadProfile());
+  }
+
+  // Helper untuk memastikan URL gambar lengkap
+  String? getFullImageUrl(String? path) {
+    if (path == null || path.isEmpty) return null;
+    if (path.startsWith('http')) return path;
+    final base = ApiConstants.baseUrlImage;
+    if (base == null) return null;
+    if (path.startsWith('/')) {
+      return '$base$path';
+    } else {
+      return '$base/$path';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,74 +43,131 @@ class ProfileScreen extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.blue[600],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              const SizedBox(height: 24),
+      body: BlocBuilder<ProfileBloc, ProfileState>(
+        builder: (context, state) {
+          // Bisa loading indicator kalau data kosong
+          if (state.nama.isEmpty) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-              // Gambar profil
-              CircleAvatar(
-                radius: 50,
-                backgroundImage: AssetImage(
-                  'lib/assets/foto_kristo.JPG',
-                ), // Ganti dengan gambar profil asli
-              ),
-
-              const SizedBox(height: 16),
-
-              // Nama dan Email
-              const Text(
-                'Kristopir',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const Text(
-                'Kristopir@example.com',
-                style: TextStyle(fontSize: 14, color: Colors.grey),
-              ),
-
-              const SizedBox(height: 16),
-
-              // Tombol Edit Profil
-              ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const EditProfileScreen(),
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  const SizedBox(height: 24),
+                  // Gambar profil
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundImage:
+                        (state.fotoUrl != null && state.fotoUrl!.isNotEmpty)
+                            ? NetworkImage(getFullImageUrl(state.fotoUrl)!)
+                            : const AssetImage('assets/images/4.jpeg')
+                                as ImageProvider,
+                  ),
+                  const SizedBox(height: 16),
+                  // Nama dan Email
+                  Text(
+                    state.nama,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
-                  );
-                },
-                icon: const Icon(Icons.edit, color: Colors.white),
-                label: const Text(
-                  'Edit Profil',
-                  style: TextStyle(color: Colors.white),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue[600],
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 12,
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+                  Text(
+                    state.email,
+                    style: const TextStyle(fontSize: 14, color: Colors.grey),
                   ),
-                ),
+                  const SizedBox(height: 16),
+
+                  // Tombol Edit Profil
+                  ElevatedButton.icon(
+                    onPressed: () async {
+                      final userBaru = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (context) => BlocProvider(
+                                create:
+                                    (context) => EditProfileBloc(
+                                      ProfileRepository(Dio()),
+                                    ),
+                                child: const EditProfileScreen(),
+                              ),
+                        ),
+                      );
+                      // Setelah update profile, trigger event
+                      if (userBaru != null) {
+                        context.read<ProfileBloc>().add(
+                          ProfileUpdated(userBaru),
+                        );
+                      }
+                    },
+                    icon: const Icon(Icons.edit, color: Colors.white),
+                    label: const Text(
+                      'Edit Profil',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue[600],
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Pengaturan Aplikasi
+                  const Divider(),
+                  _buildSettingItem(Icons.lock, 'Ganti Password'),
+                  _buildSettingItem(Icons.notifications, 'Notifikasi'),
+                  _buildSettingItem(Icons.language, 'Bahasa'),
+                  _buildSettingItem(Icons.info, 'Tentang Aplikasi'),
+                  _buildSettingItem(
+                    Icons.logout,
+                    'Keluar',
+                    isDestructive: true,
+                    onTap: () async {
+                      final confirm = await showDialog<bool>(
+                        context: context,
+                        builder:
+                            (context) => AlertDialog(
+                              title: const Text('Konfirmasi'),
+                              content: const Text('Yakin ingin keluar?'),
+                              actions: [
+                                TextButton(
+                                  child: const Text('Batal'),
+                                  onPressed:
+                                      () => Navigator.pop(context, false),
+                                ),
+                                TextButton(
+                                  child: const Text('Keluar'),
+                                  onPressed: () => Navigator.pop(context, true),
+                                ),
+                              ],
+                            ),
+                      );
+                      if (confirm == true) {
+                        // Hapus token
+                        await TokenStorage().clearToken();
+                        // Navigasi ke halaman login, ganti sesuai route kamu
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          '/login',
+                          (r) => false,
+                        );
+                      }
+                    },
+                  ),
+                ],
               ),
-
-              const SizedBox(height: 24),
-
-              // Pengaturan Aplikasi
-              const Divider(),
-              _buildSettingItem(Icons.lock, 'Ganti Password'),
-              _buildSettingItem(Icons.notifications, 'Notifikasi'),
-              _buildSettingItem(Icons.language, 'Bahasa'),
-              _buildSettingItem(Icons.info, 'Tentang Aplikasi'),
-              _buildSettingItem(Icons.logout, 'Keluar', isDestructive: true),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -89,6 +177,7 @@ class ProfileScreen extends StatelessWidget {
     IconData icon,
     String title, {
     bool isDestructive = false,
+    VoidCallback? onTap,
   }) {
     return ListTile(
       leading: Icon(icon, color: isDestructive ? Colors.red : Colors.black54),
@@ -99,9 +188,7 @@ class ProfileScreen extends StatelessWidget {
           fontWeight: FontWeight.w500,
         ),
       ),
-      onTap: () {
-        // Aksi saat item diklik
-      },
+      onTap: onTap,
     );
   }
 }

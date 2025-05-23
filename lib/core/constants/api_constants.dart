@@ -7,5 +7,6 @@ class ApiConstants {
   static String loginEndpoint = '/login';
   static String registerEndpoint = '/register';
   static String bukuEndpoint = '/cariBuku?search=';
+  static String updateProfileEndpoint = '/user/updateProfile';
   static String favoritEndpoint = '/favorit';
 }
