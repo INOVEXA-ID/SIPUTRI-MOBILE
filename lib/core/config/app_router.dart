@@ -4,6 +4,10 @@ import 'package:siputri_mobile/core/services/dio_client.dart';
 import 'package:siputri_mobile/features/auth/bloc/auth_bloc.dart';
 import 'package:siputri_mobile/features/auth/repositories/auth_repository.dart';
 import 'package:siputri_mobile/features/auth/screens/index.dart';
+import 'package:siputri_mobile/features/favorit/bloc/favorit_bloc.dart';
+import 'package:siputri_mobile/features/favorit/repositories/favorit_repository.dart';
+import 'package:siputri_mobile/features/home/bloc/buku_bloc.dart';
+import 'package:siputri_mobile/features/home/repositories/buku_repository.dart';
 import 'package:siputri_mobile/features/home/screens/index.dart';
 import 'package:siputri_mobile/features/navigation/bloc/navigation_bloc.dart';
 import 'package:siputri_mobile/features/navigation/index.dart';
@@ -11,6 +15,8 @@ import 'package:siputri_mobile/features/pdf_render/index.dart';
 import 'package:siputri_mobile/features/register/bloc/register_bloc.dart';
 import 'package:siputri_mobile/features/register/repositories/register_repository.dart';
 import 'package:siputri_mobile/features/register/screens/index.dart';
+import 'package:siputri_mobile/features/search/bloc/buku_search_bloc.dart';
+import 'package:siputri_mobile/features/search/repositories/buku_search_repository.dart';
 import 'package:siputri_mobile/features/splash/bloc/splash_bloc.dart';
 import 'package:siputri_mobile/features/splash/screens/index.dart';
 
@@ -45,8 +51,27 @@ class AppRouter {
       case navigationBarPage:
         return MaterialPageRoute(
           builder:
-              (context) => BlocProvider(
-                create: (_) => NavigationBloc(),
+              (context) => MultiBlocProvider(
+                providers: [
+                  BlocProvider(create: (context) => NavigationBloc()),
+                  BlocProvider(
+                    create:
+                        (context) =>
+                            BukuBloc(BukuRepository(DioClient()))
+                              ..add(LoadBuku()),
+                  ),
+                  BlocProvider(
+                    create:
+                        (context) =>
+                            BukuSearchBloc(BukuSearchRepository(DioClient())),
+                  ),
+                  BlocProvider(
+                    create:
+                        (_) => FavoritBloc(
+                          FavoritRepository(dioClient: DioClient()),
+                        )..add(GetFavorit()),
+                  ),
+                ],
                 child: NavigationBarPage(),
               ),
         );

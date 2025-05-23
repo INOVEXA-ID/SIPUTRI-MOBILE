@@ -34,8 +34,9 @@ class RegisterRepository {
         },
       );
       log(response.data.toString());
-
-      if (response.statusCode != 201) {
+      if (response.statusCode == 200) {
+        return response.data['message'];
+      } else {
         throw Exception('Gagal register');
       }
     } catch (e) {
@@ -44,7 +45,7 @@ class RegisterRepository {
         log("Data: ${e.response?.data}");
         throw Exception(e.response?.data['message'] ?? 'Login gagal');
       }
-      throw Exception('Terjadi kesalahan');
+      // throw Exception('Terjadi kesalahan');
     }
   }
 }

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:siputri_mobile/core/constants/api_constants.dart';
 import 'package:siputri_mobile/features/register/bloc/register_bloc.dart';
 
 class RegisterForm extends StatefulWidget {
@@ -47,10 +45,10 @@ class _RegisterFormState extends State<RegisterForm> {
     return BlocConsumer<RegisterBloc, RegisterState>(
       listener: (context, state) {
         if (state is RegisterSuccess) {
+          Navigator.pop(context);
           ScaffoldMessenger.of(
             context,
-          ).showSnackBar(SnackBar(content: Text("Register berhasil")));
-          Navigator.pop(context);
+          ).showSnackBar(SnackBar(content: Text(state.message)));
         } else if (state is RegisterFailure) {
           ScaffoldMessenger.of(
             context,

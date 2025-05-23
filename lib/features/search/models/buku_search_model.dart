@@ -1,19 +1,22 @@
 import 'dart:convert';
 
-BukuModel bukuModelFromJson(String str) => BukuModel.fromJson(json.decode(str));
+BukuSearchModel bukuSearchModelFromJson(String str) =>
+    BukuSearchModel.fromJson(json.decode(str));
 
-String bukuModelToJson(BukuModel data) => json.encode(data.toJson());
+String bukuSearchModelToJson(BukuSearchModel data) =>
+    json.encode(data.toJson());
 
-class BukuModel {
+class BukuSearchModel {
   String message;
   List<Datum> data;
 
-  BukuModel({required this.message, required this.data});
+  BukuSearchModel({required this.message, required this.data});
 
-  factory BukuModel.fromJson(Map<String, dynamic> json) => BukuModel(
-    message: json["message"],
-    data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
-  );
+  factory BukuSearchModel.fromJson(Map<String, dynamic> json) =>
+      BukuSearchModel(
+        message: json["message"],
+        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+      );
 
   Map<String, dynamic> toJson() => {
     "message": message,

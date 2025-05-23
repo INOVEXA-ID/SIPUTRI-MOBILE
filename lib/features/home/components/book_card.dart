@@ -6,7 +6,7 @@ import 'package:siputri_mobile/features/detail_buku/detial_buku_screen.dart';
 class BookCard extends StatelessWidget {
   final String title;
   final String description;
-  final Widget thumbnail;
+  final String thumbnail;
 
   const BookCard({
     super.key,
@@ -26,7 +26,7 @@ class BookCard extends StatelessWidget {
                 (context) => BookDetailScreen(
                   title: title,
                   description: description,
-                  imageAsset: "imageAsset",
+                  imageAsset: thumbnail,
                 ),
           ),
         );
@@ -37,15 +37,14 @@ class BookCard extends StatelessWidget {
           color: Colors.grey.shade200,
           child: Stack(
             children: [
-              Positioned.fill(child: thumbnail),
-              // Container(
-              //   decoration: BoxDecoration(
-              //     image: DecorationImage(
-              //       image: AssetImage(imageAsset),
-              //       fit: BoxFit.cover,
-              //     ),
-              //   ),
-              // ),
+              Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(thumbnail),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
               Positioned(
                 bottom: 0,
                 right: 0,

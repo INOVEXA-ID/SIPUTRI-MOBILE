@@ -1,16 +1,17 @@
 import 'dart:convert';
 
-BukuModel bukuModelFromJson(String str) => BukuModel.fromJson(json.decode(str));
+FavoritModel favoritModelFromJson(String str) =>
+    FavoritModel.fromJson(json.decode(str));
 
-String bukuModelToJson(BukuModel data) => json.encode(data.toJson());
+String favoritModelToJson(FavoritModel data) => json.encode(data.toJson());
 
-class BukuModel {
+class FavoritModel {
   String message;
   List<Datum> data;
 
-  BukuModel({required this.message, required this.data});
+  FavoritModel({required this.message, required this.data});
 
-  factory BukuModel.fromJson(Map<String, dynamic> json) => BukuModel(
+  factory FavoritModel.fromJson(Map<String, dynamic> json) => FavoritModel(
     message: json["message"],
     data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
   );
@@ -22,6 +23,42 @@ class BukuModel {
 }
 
 class Datum {
+  int idFavorit;
+  int idBuku;
+  int idUser;
+  DateTime createdAt;
+  DateTime updatedAt;
+  Buku buku;
+
+  Datum({
+    required this.idFavorit,
+    required this.idBuku,
+    required this.idUser,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.buku,
+  });
+
+  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+    idFavorit: json["id_favorit"],
+    idBuku: json["id_buku"],
+    idUser: json["id_user"],
+    createdAt: DateTime.parse(json["created_at"]),
+    updatedAt: DateTime.parse(json["updated_at"]),
+    buku: Buku.fromJson(json["buku"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id_favorit": idFavorit,
+    "id_buku": idBuku,
+    "id_user": idUser,
+    "created_at": createdAt.toIso8601String(),
+    "updated_at": updatedAt.toIso8601String(),
+    "buku": buku.toJson(),
+  };
+}
+
+class Buku {
   int idBuku;
   String judul;
   String deskripsi;
@@ -36,7 +73,7 @@ class Datum {
   DateTime createdAt;
   DateTime updatedAt;
 
-  Datum({
+  Buku({
     required this.idBuku,
     required this.judul,
     required this.deskripsi,
@@ -52,7 +89,7 @@ class Datum {
     required this.updatedAt,
   });
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+  factory Buku.fromJson(Map<String, dynamic> json) => Buku(
     idBuku: json["id_buku"],
     judul: json["judul"],
     deskripsi: json["deskripsi"],

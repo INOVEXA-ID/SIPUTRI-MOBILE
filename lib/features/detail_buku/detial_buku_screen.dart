@@ -25,21 +25,21 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  const SizedBox(height: 70),
-                  Center(
-                    child: Image.asset(
-                      widget.imageAsset,
-                      height: 400,
-                      width: 300,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16),
+          Column(
+            children: [
+              const SizedBox(height: 125),
+              Center(
+                child: Image.network(
+                  widget.imageAsset,
+                  height: 400,
+                  width: 300,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -208,7 +208,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                             ? CrossFadeState.showSecond
                                             : CrossFadeState.showFirst,
                                     firstChild: Text(
-                                      widget.description.split('.').first + '.',
+                                      '${widget.description.split('.').first}.', // kalimat awal saja
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(fontSize: 14),
