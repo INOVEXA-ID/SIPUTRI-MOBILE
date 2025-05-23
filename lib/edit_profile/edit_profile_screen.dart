@@ -20,7 +20,6 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameController;
-  late final TextEditingController _emailController;
   late final TextEditingController _teleponController;
   late final TextEditingController _alamatController;
 
@@ -33,7 +32,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     super.initState();
     final user = TokenStorage().user;
     _nameController = TextEditingController(text: user?.nama ?? '');
-    _emailController = TextEditingController(text: user?.email ?? '');
     _teleponController = TextEditingController(text: user?.telepon ?? '');
     _alamatController = TextEditingController(text: user?.alamat ?? '');
     _jenisKelamin = user?.jenisKelamin;
@@ -43,7 +41,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   void dispose() {
     _nameController.dispose();
-    _emailController.dispose();
     _teleponController.dispose();
     _alamatController.dispose();
     super.dispose();
@@ -94,13 +91,26 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       context.read<EditProfileBloc>().add(
         EditProfileSubmitted(
           nama: _nameController.text,
-          email: _emailController.text,
           telepon: _teleponController.text,
           alamat: _alamatController.text,
           jenisKelamin: _jenisKelamin ?? '',
           foto: _imageFile,
         ),
       );
+    }
+  }
+
+  // Helper untuk memastikan url gambar network benar (http/https)
+  String? _fullImageUrl(String? url) {
+    if (url == null || url.isEmpty) return null;
+    if (url.startsWith('http')) return url;
+    // pastikan tidak ada double slash
+    if (ApiConstants.baseUrlImage == null) return null;
+    final base = ApiConstants.baseUrlImage!;
+    if (url.startsWith('/')) {
+      return '$base$url';
+    } else {
+      return '$base/$url';
     }
   }
 
@@ -148,7 +158,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     ? FileImage(_imageFile!)
                                     : (_networkImageUrl != null &&
                                         _networkImageUrl!.isNotEmpty)
-                                    ? NetworkImage(_networkImageUrl!)
+                                    ? NetworkImage(
+                                      _fullImageUrl(_networkImageUrl!)!,
+                                    )
                                     : const AssetImage('assets/images/4.jpeg')
                                         as ImageProvider,
                           ),
@@ -188,22 +200,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                   const SizedBox(height: 16),
                   // Field Email
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      labelText: 'Email',
-                      prefixIcon: const Icon(Icons.email),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      filled: true,
-                      fillColor: Colors.grey[100],
-                    ),
-                    keyboardType: TextInputType.emailAddress,
-                    validator:
-                        (value) =>
-                            value!.isEmpty ? 'Email tidak boleh kosong' : null,
-                  ),
                   const SizedBox(height: 16),
                   // Field Telepon
                   TextFormField(
@@ -311,6 +307,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                     ),
                   ),
+                  // Debug token (optional, hapus di production)
+                  // TextFormField(
+                  //   initialValue: TokenStorage().user?. ?? 'tidak ada token',
+                  // ),
                 ],
               ),
             ),

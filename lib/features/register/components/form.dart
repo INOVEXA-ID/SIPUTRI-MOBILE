@@ -215,11 +215,19 @@ class _RegisterFormState extends State<RegisterForm> {
                             hint: 'contoh@email.com',
                           ),
                           keyboardType: TextInputType.emailAddress,
-                          validator:
-                              (value) =>
-                                  value!.isEmpty
-                                      ? 'Email tidak boleh kosong'
-                                      : null,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Email tidak boleh kosong';
+                            }
+                            // Cek validasi format email
+                            final emailRegex = RegExp(
+                              r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$",
+                            );
+                            if (!emailRegex.hasMatch(value)) {
+                              return 'Format email tidak valid';
+                            }
+                            return null;
+                          },
                         ),
                         const SizedBox(height: 12),
 
@@ -230,7 +238,7 @@ class _RegisterFormState extends State<RegisterForm> {
                           decoration: _inputDecoration(
                             label: 'Password',
                             icon: Icons.lock,
-                            hint: 'Minimal 6 karakter',
+                            hint: 'Minimal 8 karakter',
                             suffixIcon: IconButton(
                               icon: Icon(
                                 _passwordVisible
@@ -250,7 +258,7 @@ class _RegisterFormState extends State<RegisterForm> {
                               return 'Password tidak boleh kosong';
                             }
                             if (value.length < 6) {
-                              return 'Password minimal 6 karakter';
+                              return 'Password minimal 8 karakter';
                             }
                             return null;
                           },

@@ -11,7 +11,6 @@ class ProfileRepository {
 
   Future<User> updateProfile({
     required String nama,
-    required String email,
     required String telepon,
     required String alamat,
     required String jenisKelamin,
@@ -22,7 +21,6 @@ class ProfileRepository {
 
     final formData = FormData.fromMap({
       "nama": nama,
-      "email": email,
       "telepon": telepon,
       "alamat": alamat,
       "jenis_kelamin": jenisKelamin,
@@ -33,8 +31,11 @@ class ProfileRepository {
         ),
     });
 
-    final response = await dio.put(
-      ApiConstants.updateProfileEndpoint, // misal '/user/update'
+    // Gabungkan baseUrl + endpoint
+    final url = "${ApiConstants.baseUrl}${ApiConstants.updateProfileEndpoint}";
+
+    final response = await dio.post(
+      url,
       data: formData,
       options: Options(
         headers: {
@@ -46,9 +47,26 @@ class ProfileRepository {
 
     // Parse response (misal: {"message": "...", "user": {...}})
     if (response.statusCode == 200) {
-      final user = User.fromJson(response.data['user']);
-      await TokenStorage().saveUser(user);
-      return user;
+      final userJson = response.data['data'];
+      if (userJson == null) {
+        throw Exception(
+          response.data['message'] ?? "Gagal update profil: data user kosong",
+        );
+      }
+      final oldUser = TokenStorage().user;
+      final user = User.fromJson(userJson);
+      final mergedUser = User(
+        idUser: user.idUser,
+        nim: user.nim ?? oldUser?.nim,
+        nama: user.nama,
+        jenisKelamin: user.jenisKelamin,
+        telepon: user.telepon,
+        alamat: user.alamat,
+        foto: user.foto,
+        email: user.email ?? oldUser?.email,
+      );
+      await TokenStorage().saveUser(mergedUser);
+      return mergedUser;
     } else {
       throw Exception(response.data['message'] ?? "Gagal update profil");
     }

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:siputri_mobile/core/constants/color_constants.dart';
 import 'package:siputri_mobile/core/helper/token_storage.dart';
 import 'package:siputri_mobile/core/widgets/gap.dart';
 import 'package:siputri_mobile/core/widgets/my_text.dart';
 import 'package:siputri_mobile/core/widgets/user_avatar.dart';
+import 'package:siputri_mobile/profile/bloc/profile_bloc.dart';
 import 'package:siputri_mobile/profile/profile_screen.dart';
 
 class AppBarHome extends StatelessWidget {
@@ -28,7 +30,11 @@ class AppBarHome extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const ProfileScreen(),
+                      builder:
+                          (context) => BlocProvider(
+                            create: (context) => ProfileBloc(),
+                            child: const ProfileScreen(),
+                          ),
                     ),
                   );
                 },

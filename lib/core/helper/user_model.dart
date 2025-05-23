@@ -1,34 +1,34 @@
 class User {
   final int idUser;
-  final String nim;
+  final String? nim;
   final String nama;
   final String jenisKelamin;
   final String telepon;
   final String alamat;
   final String? foto;
-  final String email;
+  final String? email;
 
   User({
     required this.idUser,
-    required this.nim,
+    this.nim,
     required this.nama,
     required this.jenisKelamin,
     required this.telepon,
     required this.alamat,
     this.foto,
-    required this.email,
+    this.email,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       idUser: json['id_user'],
-      nim: json['nim'],
+      nim: json['nim'], // Bisa saja null
       nama: json['nama'],
       jenisKelamin: json['jenis_kelamin'],
       telepon: json['telepon'],
       alamat: json['alamat'],
-      foto: json['foto'],
-      email: json['email'],
+      foto: json['foto_url'] ?? json['foto'], // Ambil dari foto_url jika ada
+      email: json['email'], // Bisa saja null
     );
   }
 

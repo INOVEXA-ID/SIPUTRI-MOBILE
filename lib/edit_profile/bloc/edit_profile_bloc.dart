@@ -12,7 +12,6 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
       try {
         await profileRepository.updateProfile(
           nama: event.nama,
-          email: event.email,
           telepon: event.telepon,
           alamat: event.alamat,
           jenisKelamin: event.jenisKelamin,
