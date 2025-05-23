@@ -3,15 +3,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:siputri_mobile/features/bookshelf/bloc/bookshelf_bloc.dart';
 import 'package:siputri_mobile/features/bookshelf/components/card_item_read.dart';
 import 'package:siputri_mobile/features/bookshelf/components/card_item_history.dart';
-import 'package:siputri_mobile/features/home/models/buku_model.dart';
 
 class BookshelfScreen extends StatelessWidget {
   const BookshelfScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<TabBloc>(
-      create: (_) => TabBloc(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<TabBloc>(create: (_) => TabBloc()),
+        BlocProvider<BookshelfBloc>(
+          create: (_) => BookshelfBloc()..add(FetchReadingList()),
+        ),
+      ],
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: PreferredSize(
@@ -86,15 +90,19 @@ class BookshelfScreen extends StatelessWidget {
                             parent: BouncingScrollPhysics(),
                           ),
                           itemBuilder: (context, index) {
-                            final book = readingList[index];
+                            final peminjaman = readingList[index];
                             return Padding(
                               padding: const EdgeInsets.only(bottom: 7),
-                              child: CardItemRead(book: book),
+                              child: CardItemRead(peminjaman: peminjaman),
                             );
                           },
                         );
+                      } else if (bookshelfState is BookshelfLoading) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (bookshelfState is BookshelfError) {
+                        return Center(child: Text(bookshelfState.message));
                       }
-                      return const Center(child: CircularProgressIndicator());
+                      return const SizedBox();
                     },
                   );
                 case 1:

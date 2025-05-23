@@ -1,165 +1,61 @@
-import 'package:siputri_mobile/features/home/models/buku_model.dart';
-
-import '../export/index.dart';
+import 'package:flutter/material.dart';
+import 'package:siputri_mobile/features/bookshelf/models/peminjaman_model.dart';
+import 'package:siputri_mobile/core/constants/api_constants.dart';
 
 class CardItemRead extends StatelessWidget {
-  final Datum book;
-  const CardItemRead({super.key, required this.book});
+  final PeminjamanModel peminjaman;
+
+  const CardItemRead({Key? key, required this.peminjaman}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
+    final buku = peminjaman.buku;
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 2,
+      child: ListTile(
+        leading: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Image.network(
+            buku.thumbnail.startsWith('http')
+                ? buku.thumbnail
+                : '${ApiConstants.baseUrlImage}/${buku.thumbnail}',
+            width: 50,
+            height: 70,
+            fit: BoxFit.cover,
+            errorBuilder:
+                (context, error, stackTrace) => Container(
+                  width: 50,
+                  height: 70,
+                  color: Colors.grey[300],
+                  child: const Icon(Icons.broken_image),
+                ),
+          ),
+        ),
+        title: Text(
+          buku.judul,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Container(
-                    height: 140,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      image: DecorationImage(
-                        image: AssetImage("assets/images/4.jpeg"),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-                Gap(X: 12),
-                Expanded(
-                  flex: 5,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      MyText(
-                        title: "Automated Reasoning",
-                        fontSize: 12,
-                        maxLine: 2,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      MyText(
-                        title: "Budi Mulya, S.Si., M.Si.",
-                        fontSize: 11,
-                        maxLine: 2,
-                        color: Colors.grey.shade600,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      Gap(Y: 4),
-                      Row(
-                        children: [
-                          Icon(Icons.star, color: Colors.grey, size: 15),
-                          Icon(Icons.star, color: Colors.grey, size: 15),
-                          Icon(Icons.star, color: Colors.grey, size: 15),
-                          Icon(Icons.star, color: Colors.grey, size: 15),
-                          Icon(Icons.star, color: Colors.grey, size: 15),
-                          Gap(X: 5),
-                          MyText(
-                            title: "0.0",
-                            fontSize: 11,
-                            maxLine: 2,
-                            color: Colors.grey.shade600,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ],
-                      ),
-                      Gap(Y: 4),
-                      MyText(
-                        title:
-                            "Added customizable button border style and shadow Added navbar RTL support (thanks to hennonoman) Added semantic label (thanks to tsinis)",
-                        fontSize: 10,
-                        maxLine: 5,
-                        color: Colors.grey.shade600,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Gap(Y: 6),
-            Divider(thickness: 2, color: Colors.white),
-            Gap(Y: 3),
-            MyText(
-              title: "18 Mei 2025",
-              fontSize: 10,
-              maxLine: 5,
-              color: Colors.grey.shade600,
-              fontWeight: FontWeight.w600,
-            ),
-            Row(
-              children: [
-                MyText(
-                  title: "Berlaku sampai 20 Mei 2025 23:59",
-                  fontSize: 10,
-                  maxLine: 5,
-                  color: Colors.grey.shade600,
-                  fontWeight: FontWeight.w500,
-                ),
-                Gap(X: 5),
-                MyText(
-                  title: "(2 Hari lagi)",
-                  fontSize: 10,
-                  maxLine: 5,
-                  color: ColorConstants.primaryColor,
-                  fontWeight: FontWeight.w500,
-                ),
-              ],
-            ),
-            Gap(Y: 3),
-            Divider(thickness: 2, color: Colors.white),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                MyText(
-                  title: "Belum di baca",
-                  fontSize: 10,
-                  maxLine: 5,
-                  color: Colors.amber.shade800,
-                  fontWeight: FontWeight.w600,
-                ),
-                Material(
-                  borderOnForeground: true,
-                  child: InkWell(
-                    onTap: () {
-                      debugPrint("Baca");
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 15,
-                          vertical: 7,
-                        ),
-                        child: Center(
-                          child: MyText(
-                            title: "Baca",
-                            fontSize: 10,
-                            maxLine: 5,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            Text('Penulis: ${buku.penulis}'),
+            Text('Penerbit: ${buku.penerbit}'),
+            Text('Pinjam: ${peminjaman.tanggalPeminjaman}'),
+            Text('Kembali: ${peminjaman.tanggalPengembalian}'),
+            Text('Status: ${peminjaman.status}'),
+            if (peminjaman.antreanKe > 0)
+              Text('Antrean ke-${peminjaman.antreanKe}'),
           ],
         ),
+        trailing:
+            peminjaman.status == "dipinjam"
+                ? const Icon(Icons.book, color: Colors.green)
+                : null,
+        onTap: () {
+          // Navigasi ke detail atau aksi lain
+        },
       ),
     );
   }

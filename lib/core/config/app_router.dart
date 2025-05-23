@@ -29,7 +29,7 @@ class AppRouter {
   static const splashScreen = "/splash-screen";
   static const navigationBarPage = "/navigation-bar";
   static const pdfRenderPage = "/pdf-render";
-  static const detailBookScreen = "/detailBookScreen";
+  static const detailBookScreen = "/BookDetailScreen";
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -87,6 +87,15 @@ class AppRouter {
               (context) => BlocProvider(
                 create: (_) => RegisterBloc(RegisterRepository(DioClient())),
                 child: RegisterScreen(),
+              ),
+        );
+      case detailBookScreen:
+        final args = settings.arguments as Map<String, dynamic>?;
+        return MaterialPageRoute(
+          builder:
+              (context) => BlocProvider.value(
+                value: BlocProvider.of<BookshelfBloc>(context),
+                child: BookDetailScreen(book: args!['book']),
               ),
         );
       default:

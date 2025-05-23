@@ -132,9 +132,6 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                           width: double.infinity,
                           child: ElevatedButton.icon(
                             onPressed: () {
-                              context.read<BookshelfBloc>().add(
-                                AddBookToReading(widget.book),
-                              );
                               setState(() {
                                 isBorrowed = true;
                               });
