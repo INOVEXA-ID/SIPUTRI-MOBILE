@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:siputri_mobile/core/config/app_router.dart';
 import 'package:siputri_mobile/core/constants/api_constants.dart';
 import 'package:siputri_mobile/core/widgets/gap.dart';
 import 'package:siputri_mobile/features/home/bloc/buku_bloc.dart';
 import 'package:siputri_mobile/features/home/components/app_bar.dart';
 import 'package:siputri_mobile/features/home/components/book_card.dart';
+import 'package:siputri_mobile/features/detail_buku/detial_buku_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -17,11 +17,11 @@ class HomeScreen extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(140),
         child: AppBarHome(),
-      ), // AppBar(),
+      ),
       body: BlocBuilder<BukuBloc, BukuState>(
         builder: (context, state) {
           if (state is BukuLoading) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (state is BukuError) {
             return Center(child: Text('Error: ${state.message}'));
           } else if (state is BukuLoaded) {
@@ -31,13 +31,10 @@ class HomeScreen extends StatelessWidget {
                 Gap(Y: 2),
                 Expanded(
                   child: RefreshIndicator(
-                    onRefresh: () {
-                      return Future.delayed(const Duration(seconds: 1));
-                    },
+                    onRefresh: () => Future.delayed(const Duration(seconds: 1)),
                     child: GridView.builder(
                       shrinkWrap: true,
                       physics: const BouncingScrollPhysics(),
-                      scrollDirection: Axis.vertical,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 15,
                         vertical: 10,
@@ -54,15 +51,21 @@ class HomeScreen extends StatelessWidget {
                         final book = state.buku.data[index];
                         return InkWell(
                           onTap:
-                              () => Navigator.pushNamed(
+                              () => Navigator.push(
                                 context,
-                                AppRouter.pdfRenderPage,
+                                MaterialPageRoute(
+                                  builder: (_) => BookDetailScreen(book: book),
+                                ),
                               ),
                           child: BookCard(
-                            title: book.judul,
-                            description: book.deskripsi,
+                            title: book.judul ?? "tidak ada buku",
+                            description:
+                                book.deskripsi ?? "tidak ada deskripsi",
                             thumbnail:
-                                "${ApiConstants.baseUrlImage}/${book.thumbnail}",
+                                book.thumbnail != null &&
+                                        book.thumbnail!.isNotEmpty
+                                    ? "${ApiConstants.baseUrlImage}/${book.thumbnail}"
+                                    : "https://via.placeholder.com/150",
                           ),
                         );
                       },
@@ -72,7 +75,7 @@ class HomeScreen extends StatelessWidget {
               ],
             );
           } else {
-            return Center(child: Text('Tidak ada data'));
+            return const Center(child: Text('Tidak ada data'));
           }
         },
       ),

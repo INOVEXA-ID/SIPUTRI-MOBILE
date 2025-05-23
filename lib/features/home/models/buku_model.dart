@@ -23,47 +23,47 @@ class BukuModel {
 
 class Datum {
   int idBuku;
-  String judul;
-  String deskripsi;
-  String penulis;
-  String penerbit;
-  String isbn;
-  String tahunTerbit;
+  String? judul;
+  String? deskripsi;
+  String? penulis;
+  String? penerbit;
+  String? isbn;
+  String? tahunTerbit;
   int jumlahBuku;
   int jumlahHalaman;
-  String path;
-  String thumbnail;
+  String? path;
+  String? thumbnail;
   DateTime createdAt;
   DateTime updatedAt;
 
   Datum({
     required this.idBuku,
-    required this.judul,
-    required this.deskripsi,
-    required this.penulis,
-    required this.penerbit,
-    required this.isbn,
-    required this.tahunTerbit,
+    this.judul,
+    this.deskripsi,
+    this.penulis,
+    this.penerbit,
+    this.isbn,
+    this.tahunTerbit,
     required this.jumlahBuku,
     required this.jumlahHalaman,
-    required this.path,
-    required this.thumbnail,
+    this.path,
+    this.thumbnail,
     required this.createdAt,
     required this.updatedAt,
   });
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
     idBuku: json["id_buku"],
-    judul: json["judul"],
-    deskripsi: json["deskripsi"],
-    penulis: json["penulis"],
-    penerbit: json["penerbit"],
-    isbn: json["isbn"],
-    tahunTerbit: json["tahun_terbit"],
-    jumlahBuku: json["jumlah_buku"],
-    jumlahHalaman: json["jumlah_halaman"],
-    path: json["path"],
-    thumbnail: json["thumbnail"],
+    judul: json["judul"]?.toString(),
+    deskripsi: json["deskripsi"]?.toString(),
+    penulis: json["penulis"]?.toString(),
+    penerbit: json["penerbit"]?.toString(),
+    isbn: json["isbn"]?.toString(),
+    tahunTerbit: json["tahun_terbit"]?.toString(),
+    jumlahBuku: json["jumlah_buku"] ?? 0,
+    jumlahHalaman: json["jumlah_halaman"] ?? 0,
+    path: json["path"]?.toString(),
+    thumbnail: json["thumbnail"]?.toString(),
     createdAt: DateTime.parse(json["created_at"]),
     updatedAt: DateTime.parse(json["updated_at"]),
   );

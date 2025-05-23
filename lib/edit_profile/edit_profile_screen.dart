@@ -313,9 +313,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                   ),
                   // Debug token (optional, hapus di production)
-                  // TextFormField(
-                  //   initialValue: TokenStorage().user?. ?? 'tidak ada token',
-                  // ),
+                  TextFormField(initialValue: TokenStorage().token),
                 ],
               ),
             ),
