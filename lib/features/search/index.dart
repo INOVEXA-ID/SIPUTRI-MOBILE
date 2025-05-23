@@ -18,103 +18,119 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  final searchC = TextEditingController();
+  late TextEditingController searchC = TextEditingController();
+
+  @override
+  void dispose() {
+    searchC.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(70),
-        child: AppBar(
-          backgroundColor: ColorConstants.primaryColor,
-          title: Container(
-            margin: EdgeInsets.only(top: 12),
-            height: 40,
-            child: TextField(
-              controller: searchC,
-              onSubmitted: (value) {
-                context.read<BukuSearchBloc>().add(LoadSearchBuku(value));
-              },
-              decoration: InputDecoration(
-                hintText: 'Cari buku',
-                prefixIcon: const Icon(
-                  Icons.search,
-                  color: Colors.grey,
-                  size: 20,
+    return BlocListener<BukuSearchBloc, BukuSearchState>(
+      listenWhen: (previous, current) => current is BukuSearchLoaded,
+      listener: (context, state) {
+        if (state is BukuSearchLoaded) {
+          searchC.text = state.searchVal.toString();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(70),
+          child: AppBar(
+            backgroundColor: ColorConstants.primaryColor,
+            title: Container(
+              margin: EdgeInsets.only(top: 12),
+              height: 40,
+              child: TextField(
+                controller: searchC,
+                onSubmitted: (value) {
+                  context.read<BukuSearchBloc>().add(LoadSearchBuku(value));
+                },
+                decoration: InputDecoration(
+                  hintText: 'Cari buku',
+                  prefixIcon: const Icon(
+                    Icons.search,
+                    color: Colors.grey,
+                    size: 20,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 0),
                 ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide.none,
-                ),
-                filled: true,
-                fillColor: Colors.white,
-                contentPadding: const EdgeInsets.symmetric(vertical: 0),
               ),
             ),
           ),
         ),
-      ),
-      body: BlocBuilder<BukuSearchBloc, BukuSearchState>(
-        builder: (context, state) {
-          if (state is BukuSearchLoading) {
-            return Center(child: CircularProgressIndicator());
-          } else if (state is BukuSearchError) {
-            return Center(child: Text('Error: ${state.message}'));
-          } else if (state is BukuSearchLoaded) {
-            if (state.buku.data.isEmpty) {
-              return EmptySearch();
-            } else {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Gap(Y: 2),
-                  Expanded(
-                    child: RefreshIndicator(
-                      onRefresh: () {
-                        return Future.delayed(const Duration(seconds: 1));
-                      },
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        physics: const BouncingScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 15,
-                          vertical: 10,
-                        ),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 15,
-                              mainAxisSpacing: 15,
-                              childAspectRatio: 0.67,
-                            ),
-                        itemCount: state.buku.data.length,
-                        itemBuilder: (context, index) {
-                          final book = state.buku.data[index];
-                          return InkWell(
-                            // onTap:
-                            //     () => Navigator.pushNamed(
-                            //       context,
-                            //       AppRouter.pdfRenderPage,
-                            //     ),
-                            child: BookCard(
-                              title: book.judul,
-                              description: book.deskripsi,
-                              thumbnail:
-                                  "${ApiConstants.baseUrlImage}/${book.thumbnail}",
-                            ),
-                          );
+        body: BlocBuilder<BukuSearchBloc, BukuSearchState>(
+          builder: (context, state) {
+            if (state is BukuSearchLoading) {
+              return Center(child: CircularProgressIndicator());
+            } else if (state is BukuSearchError) {
+              return Center(child: Text('Error: ${state.message}'));
+            } else if (state is BukuSearchLoaded) {
+              // searchC.text = state.searchVal.toString();
+              if (state.buku.data.isEmpty) {
+                return EmptySearch();
+              } else {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Gap(Y: 2),
+                    Expanded(
+                      child: RefreshIndicator(
+                        onRefresh: () {
+                          return Future.delayed(const Duration(seconds: 1));
                         },
+                        child: GridView.builder(
+                          shrinkWrap: true,
+                          physics: const BouncingScrollPhysics(),
+                          scrollDirection: Axis.vertical,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 10,
+                          ),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 15,
+                                mainAxisSpacing: 15,
+                                childAspectRatio: 0.67,
+                              ),
+                          itemCount: state.buku.data.length,
+                          itemBuilder: (context, index) {
+                            final book = state.buku.data[index];
+                            return InkWell(
+                              // onTap:
+                              //     () => Navigator.pushNamed(
+                              //       context,
+                              //       AppRouter.pdfRenderPage,
+                              //     ),
+                              child: BookCard(
+                                title: book.judul,
+                                description: book.deskripsi,
+                                thumbnail:
+                                    "${ApiConstants.baseUrlImage}/${book.thumbnail}",
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              );
+                  ],
+                );
+              }
+            } else {
+              return WelcomeSearch();
             }
-          } else {
-            return WelcomeSearch();
-          }
-        },
+          },
+        ),
       ),
     );
   }

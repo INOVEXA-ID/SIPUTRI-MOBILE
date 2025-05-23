@@ -16,7 +16,7 @@ class BukuSearchBloc extends Bloc<BukuSearchEvent, BukuSearchState> {
       emit(BukuSearchLoading());
       try {
         final books = await bukuRepository.getBooks(search: event.search);
-        emit(BukuSearchLoaded(books));
+        emit(BukuSearchLoaded(books, event.search));
       } catch (e) {
         emit(BukuSearchError(e.toString()));
       }
