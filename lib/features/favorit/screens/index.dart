@@ -37,7 +37,7 @@ class FavoritScreen extends StatelessWidget {
                     await Future.delayed(Duration(seconds: 1));
                   },
                   child: ListView.builder(
-                    itemCount: 1,
+                    itemCount: state.favoritModel.data.length,
                     shrinkWrap: true,
                     padding: const EdgeInsets.symmetric(vertical: 15),
                     physics: AlwaysScrollableScrollPhysics(
@@ -45,18 +45,21 @@ class FavoritScreen extends StatelessWidget {
                     ),
                     itemBuilder: (context, index) {
                       final favorit = state.favoritModel.data[index].buku;
-                      return CardItems(
-                        title: favorit.judul,
-                        penulis: favorit.penulis,
-                        rating: "4.5",
-                        description: favorit.deskripsi,
-                        image:
-                            "${ApiConstants.baseUrlImage}/${favorit.thumbnail}",
-                        jmlUlasan: 0,
-                        jmlPembaca: 0,
-                        namaPembaca: "Rhomaedi",
-                        tersedia: 1,
-                        jmlBuku: favorit.jumlahBuku,
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: CardItems(
+                          title: favorit.judul,
+                          penulis: favorit.penulis,
+                          rating: "4.5",
+                          description: favorit.deskripsi,
+                          image:
+                              "${ApiConstants.baseUrlImage}/${favorit.thumbnail}",
+                          jmlUlasan: 0,
+                          jmlPembaca: 0,
+                          namaPembaca: "Rhomaedi",
+                          tersedia: 1,
+                          jmlBuku: favorit.jumlahBuku,
+                        ),
                       );
                     },
                   ),

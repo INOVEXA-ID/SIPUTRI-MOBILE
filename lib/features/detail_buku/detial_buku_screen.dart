@@ -303,7 +303,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                       ],
                     ),
                   ),
-                ],
+                ),
               ),
             ),
             // Floating buttons
@@ -317,6 +317,18 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                 onPressed: () => Navigator.pop(context),
                 child: const Icon(Icons.arrow_back, color: Colors.white),
               ),
+            ],
+          ),
+          // Floating buttons
+          Positioned(
+            top: 40,
+            left: 16,
+            child: FloatingActionButton(
+              mini: true,
+              backgroundColor: Colors.black.withOpacity(0.6),
+              heroTag: 'back',
+              onPressed: () => Navigator.pop(context),
+              child: const Icon(Icons.arrow_back, color: Colors.white),
             ),
             Positioned(
               top: 20,
