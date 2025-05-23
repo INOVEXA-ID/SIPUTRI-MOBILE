@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:siputri_mobile/features/bookshelf/bloc/bookshelf_bloc.dart';
 import 'package:siputri_mobile/features/home/models/buku_model.dart';
 
 class BookDetailScreen extends StatefulWidget {
@@ -132,8 +134,11 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                           width: double.infinity,
                           child: ElevatedButton.icon(
                             onPressed: () {
+                              context.read<BookshelfBloc>().add(
+                                AddBookToReading(widget.book),
+                              );
                               setState(() {
-                                isBorrowed = !isBorrowed;
+                                isBorrowed = true;
                               });
                             },
                             icon: Icon(

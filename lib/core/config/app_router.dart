@@ -4,6 +4,8 @@ import 'package:siputri_mobile/core/services/dio_client.dart';
 import 'package:siputri_mobile/features/auth/bloc/auth_bloc.dart';
 import 'package:siputri_mobile/features/auth/repositories/auth_repository.dart';
 import 'package:siputri_mobile/features/auth/screens/index.dart';
+import 'package:siputri_mobile/features/bookshelf/bloc/bookshelf_bloc.dart';
+import 'package:siputri_mobile/features/detail_buku/detial_buku_screen.dart';
 import 'package:siputri_mobile/features/favorit/bloc/favorit_bloc.dart';
 import 'package:siputri_mobile/features/favorit/repositories/favorit_repository.dart';
 import 'package:siputri_mobile/features/home/bloc/buku_bloc.dart';
@@ -27,6 +29,7 @@ class AppRouter {
   static const splashScreen = "/splash-screen";
   static const navigationBarPage = "/navigation-bar";
   static const pdfRenderPage = "/pdf-render";
+  static const detailBookScreen = "/detailBookScreen";
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -71,6 +74,7 @@ class AppRouter {
                           FavoritRepository(dioClient: DioClient()),
                         )..add(GetFavorit()),
                   ),
+                  BlocProvider(create: (_) => BookshelfBloc()),
                 ],
                 child: NavigationBarPage(),
               ),

@@ -1,7 +1,10 @@
+import 'package:siputri_mobile/features/home/models/buku_model.dart';
+
 import '../export/index.dart';
 
 class CardItemRead extends StatelessWidget {
-  const CardItemRead({super.key});
+  final Datum book;
+  const CardItemRead({super.key, required this.book});
 
   @override
   Widget build(BuildContext context) {
