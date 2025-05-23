@@ -6,4 +6,5 @@ class ApiConstants {
 
   static String loginEndpoint = '/login';
   static String registerEndpoint = '/register';
+  static String bukuEndpoint = '/buku';
 }
