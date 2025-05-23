@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:developer';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:siputri_mobile/core/constants/api_constants.dart';
 import 'package:siputri_mobile/features/register/bloc/register_bloc.dart';
 
 class RegisterForm extends StatefulWidget {
@@ -11,6 +16,8 @@ class RegisterForm extends StatefulWidget {
 
 class _RegisterFormState extends State<RegisterForm> {
   final _formKey = GlobalKey<FormState>();
+  String _password = '';
+
   final _nimController = TextEditingController();
   final _namaController = TextEditingController();
   final _noTelpController = TextEditingController();
@@ -40,11 +47,9 @@ class _RegisterFormState extends State<RegisterForm> {
     return BlocConsumer<RegisterBloc, RegisterState>(
       listener: (context, state) {
         if (state is RegisterSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Registrasi berhasil! Silakan login."),
-            ),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text("Register berhasil")));
           Navigator.pop(context);
         } else if (state is RegisterFailure) {
           ScaffoldMessenger.of(
@@ -53,325 +58,243 @@ class _RegisterFormState extends State<RegisterForm> {
         }
       },
       builder: (context, state) {
-        return GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 430),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(24),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 16,
-                      offset: const Offset(0, 6),
+        return Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'NIM',
+                    prefixIcon: Icon(Icons.portrait_rounded),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                  ],
+                    filled: true,
+                    fillColor: Colors.grey[100],
+                  ),
+                  keyboardType: TextInputType.text,
+                  controller: _nimController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'NIM tidak boleh kosong';
+                    }
+                    if (value.length != 9) {
+                      return 'NIM harus 9 karakter';
+                    }
+                    return null;
+                  },
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        // Logo/Title
-                        Image.asset(
-                          "assets/images/logo_fix.png",
-                          width: 80,
-                          height: 80,
-                        ),
-                        const SizedBox(height: 12),
-                        const Text(
-                          "Buat Akun SIPUTRI",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22,
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          "Lengkapi data berikut untuk mendaftar.",
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[700],
-                          ),
-                        ),
-                        const SizedBox(height: 30),
-
-                        // NIM
-                        TextFormField(
-                          controller: _nimController,
-                          decoration: _inputDecoration(
-                            label: 'NIM',
-                            icon: Icons.portrait_rounded,
-                            hint: 'Masukkan NIM (9 digit)',
-                          ),
-                          keyboardType: TextInputType.text,
-                          maxLength: 9,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'NIM tidak boleh kosong';
-                            }
-                            if (value.length != 9) {
-                              return 'NIM harus 9 karakter';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 12),
-
-                        // Nama
-                        TextFormField(
-                          controller: _namaController,
-                          decoration: _inputDecoration(
-                            label: 'Nama Lengkap',
-                            icon: Icons.person,
-                            hint: 'Nama sesuai KTP',
-                          ),
-                          keyboardType: TextInputType.text,
-                          validator:
-                              (value) =>
-                                  value!.isEmpty
-                                      ? 'Nama tidak boleh kosong'
-                                      : null,
-                        ),
-                        const SizedBox(height: 12),
-
-                        // Jenis Kelamin
-                        DropdownButtonFormField<String>(
-                          decoration: _inputDecoration(
-                            label: 'Jenis Kelamin',
-                            icon: Icons.wc,
-                            hint: 'Pilih salah satu',
-                          ),
-                          value: jenisKelamin,
-                          items: const [
-                            DropdownMenuItem(
-                              value: 'laki laki',
-                              child: Text('Laki-laki'),
-                            ),
-                            DropdownMenuItem(
-                              value: 'perempuan',
-                              child: Text('Perempuan'),
-                            ),
-                          ],
-                          onChanged: (value) {
-                            setState(() {
-                              jenisKelamin = value;
-                            });
-                          },
-                          validator:
-                              (value) =>
-                                  value == null
-                                      ? 'Jenis Kelamin tidak boleh kosong'
-                                      : null,
-                        ),
-                        const SizedBox(height: 12),
-
-                        // Nomor Telepon
-                        TextFormField(
-                          controller: _noTelpController,
-                          decoration: _inputDecoration(
-                            label: 'Nomor Telepon',
-                            icon: Icons.phone,
-                            hint: '08xxxxxxxxxx',
-                          ),
-                          keyboardType: TextInputType.phone,
-                          validator:
-                              (value) =>
-                                  value!.isEmpty
-                                      ? 'Nomor Telepon tidak boleh kosong'
-                                      : null,
-                        ),
-                        const SizedBox(height: 12),
-
-                        // Alamat
-                        TextFormField(
-                          controller: _alamatController,
-                          decoration: _inputDecoration(
-                            label: 'Alamat',
-                            icon: Icons.location_on,
-                            hint: 'Alamat rumah sesuai KTP',
-                          ),
-                          keyboardType: TextInputType.text,
-                          validator:
-                              (value) =>
-                                  value!.isEmpty
-                                      ? 'Alamat tidak boleh kosong'
-                                      : null,
-                        ),
-                        const SizedBox(height: 12),
-
-                        // Email
-                        TextFormField(
-                          controller: _emailController,
-                          decoration: _inputDecoration(
-                            label: 'Email',
-                            icon: Icons.email,
-                            hint: 'contoh@email.com',
-                          ),
-                          keyboardType: TextInputType.emailAddress,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Email tidak boleh kosong';
-                            }
-                            // Cek validasi format email
-                            final emailRegex = RegExp(
-                              r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$",
-                            );
-                            if (!emailRegex.hasMatch(value)) {
-                              return 'Format email tidak valid';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 12),
-
-                        // Password
-                        TextFormField(
-                          controller: _passwordController,
-                          obscureText: !_passwordVisible,
-                          decoration: _inputDecoration(
-                            label: 'Password',
-                            icon: Icons.lock,
-                            hint: 'Minimal 8 karakter',
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _passwordVisible
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                                color: Colors.grey,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _passwordVisible = !_passwordVisible;
-                                });
-                              },
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Password tidak boleh kosong';
-                            }
-                            if (value.length < 6) {
-                              return 'Password minimal 8 karakter';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 12),
-
-                        // Konfirmasi Password
-                        TextFormField(
-                          controller: _passwordConfirmationController,
-                          obscureText: !_passwordConfirmationVisible,
-                          decoration: _inputDecoration(
-                            label: 'Konfirmasi Password',
-                            icon: Icons.lock_outline,
-                            hint: 'Ulangi password',
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _passwordConfirmationVisible
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                                color: Colors.grey,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _passwordConfirmationVisible =
-                                      !_passwordConfirmationVisible;
-                                });
-                              },
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Konfirmasi Password wajib diisi';
-                            }
-                            if (value != _passwordController.text) {
-                              return 'Password tidak cocok';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 28),
-
-                        BlocBuilder<RegisterBloc, RegisterState>(
-                          builder: (context, state) {
-                            return SizedBox(
-                              width: double.infinity,
-                              height: 50,
-                              child: ElevatedButton(
-                                onPressed:
-                                    (state is RegisterLoading)
-                                        ? null
-                                        : () {
-                                          if (_formKey.currentState!
-                                              .validate()) {
-                                            context.read<RegisterBloc>().add(
-                                              RegisterSubmitted(
-                                                nim: _nimController.text,
-                                                nama: _namaController.text,
-                                                jenisKelamin: jenisKelamin!,
-                                                telepon: _noTelpController.text,
-                                                alamat: _alamatController.text,
-                                                email: _emailController.text,
-                                                password:
-                                                    _passwordController.text,
-                                                passwordConfirmation:
-                                                    _passwordConfirmationController
-                                                        .text,
-                                              ),
-                                            );
-                                          }
-                                        },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blue[700],
-                                  foregroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18),
-                                  ),
-                                  textStyle: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 17,
-                                  ),
-                                  elevation: 3,
-                                ),
-                                child:
-                                    (state is RegisterLoading)
-                                        ? const SizedBox(
-                                          width: 25,
-                                          height: 25,
-                                          child: CircularProgressIndicator(
-                                            color: Colors.white,
-                                            strokeWidth: 2,
-                                          ),
-                                        )
-                                        : const Text('Daftar'),
-                              ),
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 8),
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text(
-                            'Sudah punya akun? Login di sini',
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ],
+                SizedBox(height: 16),
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Nama',
+                    prefixIcon: Icon(Icons.person),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey[100],
+                  ),
+                  keyboardType: TextInputType.text,
+                  controller: _namaController,
+                  validator:
+                      (value) =>
+                          value!.isEmpty ? 'Nama tidak boleh kosong' : null,
+                ),
+                SizedBox(height: 16),
+                DropdownButtonFormField<String>(
+                  decoration: InputDecoration(
+                    labelText: 'Jenis Kelamin',
+                    filled: true,
+                    fillColor: Colors.grey[100],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                    ),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 14,
                     ),
                   ),
+                  items: const [
+                    DropdownMenuItem(
+                      value: 'laki laki',
+                      child: Text('Laki-laki'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'perempuan',
+                      child: Text('Perempuan'),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      jenisKelamin = value;
+                    });
+                  },
+                  validator:
+                      (value) =>
+                          value == null
+                              ? 'Jenis Kelamin tidak boleh kosong'
+                              : null,
                 ),
-              ),
+                SizedBox(height: 16),
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Nomor Telepon',
+                    prefixIcon: Icon(Icons.phone),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey[100],
+                  ),
+                  keyboardType: TextInputType.phone,
+                  controller: _noTelpController,
+                  validator:
+                      (value) =>
+                          value!.isEmpty
+                              ? 'Nomor Telepon tidak boleh kosong'
+                              : null,
+                ),
+                SizedBox(height: 16),
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Alamat',
+                    prefixIcon: Icon(Icons.location_on),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey[100],
+                  ),
+                  keyboardType: TextInputType.text,
+                  controller: _alamatController,
+                  validator:
+                      (value) =>
+                          value!.isEmpty ? 'Alamat tidak boleh kosong' : null,
+                ),
+                SizedBox(height: 16),
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    prefixIcon: Icon(Icons.email),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey[100],
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                  controller: _emailController,
+                  validator:
+                      (value) =>
+                          value!.isEmpty ? 'Email tidak boleh kosong' : null,
+                ),
+                SizedBox(height: 16),
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    prefixIcon: Icon(Icons.lock),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey[100],
+                  ),
+                  obscureText: true,
+                  onChanged: (value) {
+                    _password = value;
+                  },
+                  controller: _passwordController,
+                  validator:
+                      (value) =>
+                          value!.isEmpty ? 'Password tidak boleh kosong' : null,
+                ),
+                SizedBox(height: 16),
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Konfirmasi Password',
+                    prefixIcon: Icon(Icons.lock),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey[100],
+                  ),
+                  obscureText: true,
+                  controller: _passwordConfirmationController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Komfirmasi Password Wajib Diisi';
+                    }
+                    if (value != _password) {
+                      return 'Password Tidak Cocok';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 24),
+                BlocBuilder<RegisterBloc, RegisterState>(
+                  builder: (context, state) {
+                    return SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed:
+                            (state is RegisterLoading)
+                                ? null
+                                : () {
+                                  if (_formKey.currentState!.validate()) {
+                                    context.read<RegisterBloc>().add(
+                                      RegisterSubmitted(
+                                        nim: _nimController.text,
+                                        nama: _namaController.text,
+                                        jenisKelamin: jenisKelamin!,
+                                        telepon: _noTelpController.text,
+                                        alamat: _alamatController.text,
+                                        email: _emailController.text,
+                                        password: _passwordController.text,
+                                        passwordConfirmation:
+                                            _passwordConfirmationController
+                                                .text,
+                                      ),
+                                    );
+                                  }
+                                },
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          backgroundColor: Colors.blue[600],
+                          elevation: 4,
+                        ),
+                        child:
+                            (state is RegisterLoading)
+                                ? SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                                : Text(
+                                  'Daftar',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
           ),
         );

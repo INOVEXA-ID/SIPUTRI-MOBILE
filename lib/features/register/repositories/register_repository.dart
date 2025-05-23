@@ -34,6 +34,7 @@ class RegisterRepository {
         },
       );
       log(response.data.toString());
+
       if (response.statusCode != 201) {
         throw Exception('Gagal register');
       }

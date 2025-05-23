@@ -1,7 +1,10 @@
+
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:siputri_mobile/core/helper/user_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class TokenStorage {
   static final TokenStorage _instance = TokenStorage._internal();
@@ -40,4 +43,7 @@ class TokenStorage {
     if (userStr == null) return null;
     return User.fromJson(jsonDecode(userStr));
   }
+  }
+
+ 
 }
