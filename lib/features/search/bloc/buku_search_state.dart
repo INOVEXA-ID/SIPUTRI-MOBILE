@@ -8,7 +8,8 @@ class BukuSearchLoading extends BukuSearchState {}
 
 class BukuSearchLoaded extends BukuSearchState {
   final BukuSearchModel buku;
-  BukuSearchLoaded(this.buku);
+  String searchVal = '';
+  BukuSearchLoaded(this.buku, this.searchVal);
 }
 
 class BukuSearchError extends BukuSearchState {

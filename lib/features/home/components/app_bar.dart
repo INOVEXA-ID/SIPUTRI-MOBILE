@@ -7,6 +7,7 @@ import 'package:siputri_mobile/core/widgets/my_text.dart';
 import 'package:siputri_mobile/core/widgets/user_avatar.dart';
 import 'package:siputri_mobile/profile/bloc/profile_bloc.dart';
 import 'package:siputri_mobile/features/navigation/bloc/navigation_bloc.dart';
+import 'package:siputri_mobile/features/search/bloc/buku_search_bloc.dart';
 import 'package:siputri_mobile/profile/profile_screen.dart';
 
 class AppBarHome extends StatelessWidget {
@@ -73,7 +74,7 @@ class AppBarHome extends StatelessWidget {
                 context.read<NavigationBloc>().add(ChangeTab(1));
 
                 // 2. Kirim query ke SearchBloc (pastikan SearchScreen-nya ada BlocProvider)
-                // context.read<SearchBloc>().add(SearchTextSubmitted(value));
+                context.read<BukuSearchBloc>().add(LoadSearchBuku(value));
               },
               decoration: InputDecoration(
                 hintText: 'Cari buku',
