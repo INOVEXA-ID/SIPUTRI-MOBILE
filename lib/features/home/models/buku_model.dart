@@ -32,6 +32,7 @@ class Datum {
   int jumlahBuku;
   int jumlahHalaman;
   String path;
+  String thumbnail;
   DateTime createdAt;
   DateTime updatedAt;
 
@@ -46,6 +47,7 @@ class Datum {
     required this.jumlahBuku,
     required this.jumlahHalaman,
     required this.path,
+    required this.thumbnail,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -61,6 +63,7 @@ class Datum {
     jumlahBuku: json["jumlah_buku"],
     jumlahHalaman: json["jumlah_halaman"],
     path: json["path"],
+    thumbnail: json["thumbnail"],
     createdAt: DateTime.parse(json["created_at"]),
     updatedAt: DateTime.parse(json["updated_at"]),
   );
@@ -76,6 +79,7 @@ class Datum {
     "jumlah_buku": jumlahBuku,
     "jumlah_halaman": jumlahHalaman,
     "path": path,
+    "thumbnail": thumbnail,
     "created_at": createdAt.toIso8601String(),
     "updated_at": updatedAt.toIso8601String(),
   };

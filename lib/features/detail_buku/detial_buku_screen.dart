@@ -29,7 +29,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
             children: [
               const SizedBox(height: 125),
               Center(
-                child: Image.asset(
+                child: Image.network(
                   widget.imageAsset,
                   height: 400,
                   width: 300,
@@ -211,8 +211,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                             ? CrossFadeState.showSecond
                                             : CrossFadeState.showFirst,
                                     firstChild: Text(
-                                      widget.description.split('.').first +
-                                          '.', // kalimat awal saja
+                                      '${widget.description.split('.').first}.', // kalimat awal saja
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(fontSize: 14),

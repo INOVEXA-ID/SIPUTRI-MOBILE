@@ -67,10 +67,8 @@ class HomeScreen extends StatelessWidget {
                             child: BookCard(
                               title: book.judul,
                               description: book.deskripsi,
-                              thumbnail: PdfThumbnail(
-                                pdfUrl:
-                                    "${ApiConstants.baseUrlImage}/${book.path}",
-                              ),
+                              thumbnail:
+                                  "${ApiConstants.baseUrlImage}/${book.thumbnail}",
                             ),
                           );
                         },
