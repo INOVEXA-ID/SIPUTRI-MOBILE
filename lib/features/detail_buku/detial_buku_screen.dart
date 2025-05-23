@@ -275,9 +275,9 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                       ],
                     ),
                   ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
           // Floating buttons
           Positioned(
