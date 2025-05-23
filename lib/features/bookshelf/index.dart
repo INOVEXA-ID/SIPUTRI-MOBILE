@@ -1,8 +1,12 @@
-import './export/index.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:siputri_mobile/features/bookshelf/bloc/bookshelf_bloc.dart';
+import 'package:siputri_mobile/features/bookshelf/repository/peminjaman_buku_repository.dart';
 import 'package:siputri_mobile/features/bookshelf/components/card_item_read.dart';
 import 'package:siputri_mobile/features/bookshelf/components/card_item_history.dart';
+import 'package:siputri_mobile/core/services/dio_client.dart';
+
+import './export/index.dart';
 
 class BookshelfScreen extends StatelessWidget {
   const BookshelfScreen({super.key});
@@ -13,7 +17,15 @@ class BookshelfScreen extends StatelessWidget {
       providers: [
         BlocProvider<TabBloc>(create: (_) => TabBloc()),
         BlocProvider<BookshelfBloc>(
-          create: (_) => BookshelfBloc()..add(FetchReadingList()),
+          create:
+              (_) =>
+                  BookshelfBloc(
+                      peminjamanRepository: PeminjamanBukuRepository(
+                        DioClient(),
+                      ),
+                    )
+                    ..add(FetchReadingList())
+                    ..add(FetchHistoryList()),
         ),
       ],
       child: Scaffold(
@@ -71,58 +83,74 @@ class BookshelfScreen extends StatelessWidget {
             builder: (context, tabState) {
               final selectedIndex =
                   tabState is TabChangeState ? tabState.selectedIndex : 0;
-              switch (selectedIndex) {
-                case 0:
-                  // Tab "Sedang Dibaca"
-                  return BlocBuilder<BookshelfBloc, BookshelfState>(
-                    builder: (context, bookshelfState) {
-                      if (bookshelfState is BookshelfLoaded) {
-                        final readingList = bookshelfState.readingList;
-                        if (readingList.isEmpty) {
-                          return const Center(
-                            child: Text("Belum ada buku yang sedang dibaca."),
-                          );
-                        }
-                        return ListView.builder(
-                          itemCount: readingList.length,
-                          shrinkWrap: true,
-                          physics: const AlwaysScrollableScrollPhysics(
-                            parent: BouncingScrollPhysics(),
-                          ),
-                          itemBuilder: (context, index) {
-                            final peminjaman = readingList[index];
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 7),
-                              child: CardItemRead(peminjaman: peminjaman),
-                            );
-                          },
+              if (selectedIndex == 0) {
+                // Tab "Sedang Dibaca"
+                return BlocBuilder<BookshelfBloc, BookshelfState>(
+                  builder: (context, bookshelfState) {
+                    if (bookshelfState is BookshelfLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (bookshelfState is BookshelfLoaded) {
+                      final readingList = bookshelfState.readingList;
+                      if (readingList.isEmpty) {
+                        return const Center(
+                          child: Text("Belum ada buku yang sedang dibaca."),
                         );
-                      } else if (bookshelfState is BookshelfLoading) {
-                        return const Center(child: CircularProgressIndicator());
-                      } else if (bookshelfState is BookshelfError) {
-                        return Center(child: Text(bookshelfState.message));
                       }
-                      return const SizedBox();
-                    },
-                  );
-                case 1:
-                  // Tab "Riwayat" (masih dummy)
-                  return ListView.builder(
-                    itemCount: 4,
-                    shrinkWrap: true,
-                    physics: const AlwaysScrollableScrollPhysics(
-                      parent: BouncingScrollPhysics(),
-                    ),
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 7),
-                        child: const CardItemHistory(),
+                      return ListView.builder(
+                        itemCount: readingList.length,
+                        shrinkWrap: true,
+                        physics: const AlwaysScrollableScrollPhysics(
+                          parent: BouncingScrollPhysics(),
+                        ),
+                        itemBuilder: (context, index) {
+                          final peminjaman = readingList[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 7),
+                            child: CardItemRead(peminjaman: peminjaman),
+                          );
+                        },
                       );
-                    },
-                  );
-                default:
-                  return Container();
+                    } else if (bookshelfState is BookshelfError) {
+                      return Center(child: Text(bookshelfState.message));
+                    }
+                    return const SizedBox();
+                  },
+                );
+              } else if (selectedIndex == 1) {
+                // Tab "Riwayat"
+                return BlocBuilder<BookshelfBloc, BookshelfState>(
+                  builder: (context, bookshelfState) {
+                    if (bookshelfState is BookshelfHistoryLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (bookshelfState is BookshelfHistoryLoaded) {
+                      final historyList = bookshelfState.historyList;
+                      if (historyList.isEmpty) {
+                        return const Center(
+                          child: Text("Riwayat peminjaman kosong."),
+                        );
+                      }
+                      return ListView.builder(
+                        itemCount: historyList.length,
+                        shrinkWrap: true,
+                        physics: const AlwaysScrollableScrollPhysics(
+                          parent: BouncingScrollPhysics(),
+                        ),
+                        itemBuilder: (context, index) {
+                          final peminjaman = historyList[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 7),
+                            child: CardItemHistory(peminjaman: peminjaman),
+                          );
+                        },
+                      );
+                    } else if (bookshelfState is BookshelfHistoryError) {
+                      return Center(child: Text(bookshelfState.message));
+                    }
+                    return const SizedBox();
+                  },
+                );
               }
+              return Container();
             },
           ),
         ),
