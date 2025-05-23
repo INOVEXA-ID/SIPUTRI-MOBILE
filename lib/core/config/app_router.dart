@@ -4,6 +4,7 @@ import 'package:siputri_mobile/core/services/dio_client.dart';
 import 'package:siputri_mobile/features/auth/bloc/auth_bloc.dart';
 import 'package:siputri_mobile/features/auth/repositories/auth_repository.dart';
 import 'package:siputri_mobile/features/auth/screens/index.dart';
+import 'package:siputri_mobile/features/detail_buku/screens/daftar_tunggu_buku.dart';
 import 'package:siputri_mobile/features/favorit/bloc/favorit_bloc.dart';
 import 'package:siputri_mobile/features/favorit/repositories/favorit_repository.dart';
 import 'package:siputri_mobile/features/home/bloc/buku_bloc.dart';
@@ -27,6 +28,7 @@ class AppRouter {
   static const splashScreen = "/splash-screen";
   static const navigationBarPage = "/navigation-bar";
   static const pdfRenderPage = "/pdf-render";
+  static const daftarTungguBukuPage = "/daftar-tunggu-buku";
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -75,8 +77,12 @@ class AppRouter {
                 child: NavigationBarPage(),
               ),
         );
-      case pdfRenderPage:
-        return MaterialPageRoute(builder: (context) => const PDFRenderScreen());
+      // case pdfRenderPage:
+      //   return MaterialPageRoute(builder: (context) => PDFRenderScreen());
+      case daftarTungguBukuPage:
+        return MaterialPageRoute(
+          builder: (context) => DaftarTungguBukuScreen(),
+        );
       case registerScreen:
         return MaterialPageRoute(
           builder:

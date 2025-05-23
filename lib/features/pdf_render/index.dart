@@ -4,7 +4,8 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 class PDFRenderScreen extends StatefulWidget {
-  const PDFRenderScreen({super.key});
+  String urlBuku;
+  PDFRenderScreen({super.key, required this.urlBuku});
 
   @override
   State<PDFRenderScreen> createState() => _PDFRenderScreenState();
@@ -135,8 +136,8 @@ class _PDFRenderScreenState extends State<PDFRenderScreen> {
       body: Column(
         children: [
           Expanded(
-            child: SfPdfViewer.asset(
-              'assets/pdf/bughunting101.pdf',
+            child: SfPdfViewer.network(
+              widget.urlBuku,
               controller: _pdfController,
               onDocumentLoaded: _handleDocumentLoaded,
               onPageChanged: (details) {

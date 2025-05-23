@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:siputri_mobile/core/config/app_router.dart';
+import 'package:siputri_mobile/core/constants/color_constants.dart';
+import 'package:siputri_mobile/core/widgets/gap.dart';
 import 'package:siputri_mobile/features/home/models/buku_model.dart';
+import 'package:siputri_mobile/features/pdf_render/index.dart';
 
 class BookDetailScreen extends StatefulWidget {
   final Datum book;
@@ -12,7 +16,86 @@ class BookDetailScreen extends StatefulWidget {
 
 class _BookDetailScreenState extends State<BookDetailScreen> {
   bool isBorrowed = false;
+  bool isWaitingBook = false;
   bool _isExpanded = false;
+
+  void dialogPinjamBuku(BuildContext context) {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text('Pinjam Buku'),
+            content: Text('Apakah anda ingin meminjam buku?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context), // Batal
+                child: Text('Tidak'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context); // Tutup dialog
+                  isBorrowed = !isBorrowed;
+                  setState(() {});
+                },
+                child: Text(
+                  'Ya',
+                  style: TextStyle(color: ColorConstants.primaryColor),
+                ),
+              ),
+            ],
+          ),
+    );
+  }
+
+  void showReturnBookDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text('Konfirmasi'),
+            content: Text('Apakah buku mau dikembalikan sekarang?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context), // Batal
+                child: Text('Tidak'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context); // Tutup dialog
+                  // Tambahkan logika pengembalian buku di sini
+                },
+                child: Text('Ya'),
+              ),
+            ],
+          ),
+    );
+  }
+
+  void dialogDaftarTunggu(BuildContext context) {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text('Join Waiting List'),
+            content: Text('Apakah ingin mengantri buku ini?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context), // Batal
+                child: Text('Tidak'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context); // Tutup dialog
+                  // Tambahkan logika pengembalian buku di sini
+                  isWaitingBook = !isWaitingBook;
+                  setState(() {});
+                },
+                child: Text('Ya'),
+              ),
+            ],
+          ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +110,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                 children: [
                   Center(
                     child: Image.network(
-                      book.thumbnail != null && book.thumbnail!.isNotEmpty
-                          ? book.thumbnail!
-                          : "https://via.placeholder.com/180x260",
+                      book.thumbnailUrl.toString(),
                       height: 260,
                       width: 180,
                       fit: BoxFit.cover,
@@ -51,7 +132,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          book.judul ?? '-',
+                          book.judul,
                           style: const TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
@@ -60,7 +141,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          book.penulis ?? '-',
+                          book.penulis,
                           style: const TextStyle(
                             fontSize: 15,
                             color: Colors.black54,
@@ -85,8 +166,8 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                   }),
                                 ),
                                 const SizedBox(height: 4),
-                                const Text(
-                                  '4.5 Rating',
+                                Text(
+                                  "${book.rating} Rating",
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.black54,
@@ -100,7 +181,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                 Row(
                                   children: [
                                     Text(
-                                      (book.jumlahBuku ?? 0).toString(),
+                                      "1",
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -128,37 +209,142 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                         const SizedBox(height: 24),
 
                         // Tombol Pinjam Buku
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              setState(() {
-                                isBorrowed = !isBorrowed;
-                              });
-                            },
-                            icon: Icon(
+                        if (book.jumlahBuku == 1)
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: ElevatedButton.icon(
+                                  onPressed: () {
+                                    if (!isBorrowed) {
+                                      dialogPinjamBuku(context);
+                                    } else {
+                                      // setState(() {
+                                      //   isBorrowed = !isBorrowed;
+                                      // });
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) => PDFRenderScreen(
+                                                urlBuku: book.path,
+                                              ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  icon: Icon(
+                                    isBorrowed
+                                        ? Icons.menu_book_rounded
+                                        : Icons.amp_stories_outlined,
+                                    color: Colors.white,
+                                  ),
+                                  label: Text(
+                                    isBorrowed ? 'Baca' : 'Pinjam Buku',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 14,
+                                    ),
+                                    backgroundColor:
+                                        isBorrowed ? Colors.green : Colors.blue,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              isBorrowed ? Gap(X: 12) : Container(),
                               isBorrowed
-                                  ? Icons.check_circle
-                                  : Icons.amp_stories_outlined,
-                              color: Colors.white,
-                            ),
-                            label: Text(
-                              isBorrowed ? 'Dipinjam' : 'Pinjam Buku',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                              ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              backgroundColor:
-                                  isBorrowed ? Colors.green : Colors.blue,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
+                                  ? InkWell(
+                                    onTap: () {
+                                      showReturnBookDialog(context);
+                                    },
+                                    child: SizedBox(
+                                      width: 50,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Icon(Icons.more_vert, size: 30),
+                                      ),
+                                    ),
+                                  )
+                                  : Container(),
+                            ],
                           ),
-                        ),
+                        if (book.jumlahBuku == 0)
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: ElevatedButton.icon(
+                                  onPressed: () {
+                                    // if (isWaitingBook) {
+                                    //   Navigator.pushNamed(
+                                    //     context,
+                                    //     AppRouter.daftarTungguBukuPage,
+                                    //   );
+                                    // } else {
+                                    dialogDaftarTunggu(context);
+                                    // }
+                                  },
+                                  icon: Icon(
+                                    isWaitingBook
+                                        ? Icons.library_add_check_rounded
+                                        : Icons.add_to_photos_rounded,
+                                    color: Colors.white,
+                                  ),
+                                  label: Text(
+                                    isWaitingBook
+                                        ? "Dalam Daftar Tunggu"
+                                        : "Daftar Tunggu",
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 14,
+                                    ),
+                                    backgroundColor:
+                                        isWaitingBook
+                                            ? Colors.green
+                                            : ColorConstants.textC,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Gap(X: 12),
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    AppRouter.daftarTungguBukuPage,
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.all(
+                                    13,
+                                  ), // Atur sesuai ukuran ikon
+                                  backgroundColor: ColorConstants.textC,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: Icon(
+                                  Icons.timer,
+                                  color: Colors.white,
+                                  size: 25,
+                                ),
+                              ),
+                            ],
+                          ),
 
                         const SizedBox(height: 24),
                         // Statistik cepat
@@ -226,13 +412,13 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                             ? CrossFadeState.showSecond
                                             : CrossFadeState.showFirst,
                                     firstChild: Text(
-                                      '${(book.deskripsi ?? '-').split('.').first}.',
+                                      '${(book.deskripsi).split('.').first}.',
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(fontSize: 14),
                                     ),
                                     secondChild: Text(
-                                      book.deskripsi ?? '-',
+                                      book.deskripsi,
                                       style: const TextStyle(fontSize: 14),
                                     ),
                                   ),
@@ -251,25 +437,25 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                               _buildInfoColumn(
                                 title: 'Penulis',
                                 icon: Icons.person,
-                                content: book.penulis ?? '-',
+                                content: book.penulis,
                               ),
                               _verticalDivider(),
                               _buildInfoColumn(
                                 title: 'Penerbit',
                                 icon: Icons.business,
-                                content: book.penerbit ?? '-',
+                                content: book.penerbit,
                               ),
                               _verticalDivider(),
                               _buildInfoColumn(
                                 title: 'ISBN',
                                 icon: Icons.qr_code,
-                                content: book.isbn ?? '-',
+                                content: book.isbn,
                               ),
                               _verticalDivider(),
                               _buildInfoColumn(
                                 title: 'Tahun',
                                 icon: Icons.calendar_today,
-                                content: book.tahunTerbit ?? '-',
+                                content: book.tahunTerbit,
                               ),
                             ],
                           ),
@@ -298,10 +484,9 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                       ],
                     ),
                   ),
-                ),
+                ],
               ),
             ),
-            // Floating buttons
             Positioned(
               top: 20,
               left: 16,
@@ -312,18 +497,6 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                 onPressed: () => Navigator.pop(context),
                 child: const Icon(Icons.arrow_back, color: Colors.white),
               ),
-            ],
-          ),
-          // Floating buttons
-          Positioned(
-            top: 40,
-            left: 16,
-            child: FloatingActionButton(
-              mini: true,
-              backgroundColor: Colors.black.withOpacity(0.6),
-              heroTag: 'back',
-              onPressed: () => Navigator.pop(context),
-              child: const Icon(Icons.arrow_back, color: Colors.white),
             ),
             Positioned(
               top: 20,

@@ -5,7 +5,7 @@ import 'package:siputri_mobile/core/widgets/gap.dart';
 import 'package:siputri_mobile/features/home/bloc/buku_bloc.dart';
 import 'package:siputri_mobile/features/home/components/app_bar.dart';
 import 'package:siputri_mobile/features/home/components/book_card.dart';
-import 'package:siputri_mobile/features/detail_buku/detial_buku_screen.dart';
+import 'package:siputri_mobile/features/detail_buku/screens/detial_buku_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -58,14 +58,9 @@ class HomeScreen extends StatelessWidget {
                                 ),
                               ),
                           child: BookCard(
-                            title: book.judul ?? "tidak ada buku",
-                            description:
-                                book.deskripsi ?? "tidak ada deskripsi",
-                            thumbnail:
-                                book.thumbnail != null &&
-                                        book.thumbnail!.isNotEmpty
-                                    ? "${ApiConstants.baseUrlImage}/${book.thumbnail}"
-                                    : "https://via.placeholder.com/150",
+                            title: book.judul,
+                            description: book.deskripsi,
+                            thumbnail: book.thumbnailUrl,
                           ),
                         );
                       },
