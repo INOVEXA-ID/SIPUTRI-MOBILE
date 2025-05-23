@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:siputri_mobile/core/constants/color_constants.dart';
 import 'package:siputri_mobile/features/bookshelf/index.dart';
-import 'package:siputri_mobile/features/favorit/index.dart';
+import 'package:siputri_mobile/features/favorit/screens/index.dart';
 import 'package:siputri_mobile/features/home/screens/index.dart';
 import 'package:siputri_mobile/features/navigation/bloc/navigation_bloc.dart';
 import 'package:siputri_mobile/features/search/index.dart';

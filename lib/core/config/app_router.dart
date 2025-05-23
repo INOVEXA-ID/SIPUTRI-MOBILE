@@ -4,6 +4,10 @@ import 'package:siputri_mobile/core/services/dio_client.dart';
 import 'package:siputri_mobile/features/auth/bloc/auth_bloc.dart';
 import 'package:siputri_mobile/features/auth/repositories/auth_repository.dart';
 import 'package:siputri_mobile/features/auth/screens/index.dart';
+import 'package:siputri_mobile/features/favorit/bloc/favorit_bloc.dart';
+import 'package:siputri_mobile/features/favorit/repositories/favorit_repository.dart';
+import 'package:siputri_mobile/features/home/bloc/buku_bloc.dart';
+import 'package:siputri_mobile/features/home/repositories/buku_repository.dart';
 import 'package:siputri_mobile/features/home/screens/index.dart';
 import 'package:siputri_mobile/features/navigation/bloc/navigation_bloc.dart';
 import 'package:siputri_mobile/features/navigation/index.dart';
@@ -45,8 +49,22 @@ class AppRouter {
       case navigationBarPage:
         return MaterialPageRoute(
           builder:
-              (context) => BlocProvider(
-                create: (_) => NavigationBloc(),
+              (context) => MultiBlocProvider(
+                providers: [
+                  BlocProvider(create: (context) => NavigationBloc()),
+                  BlocProvider(
+                    create:
+                        (context) =>
+                            BukuBloc(BukuRepository(DioClient()))
+                              ..add(LoadBuku()),
+                  ),
+                  BlocProvider(
+                    create:
+                        (_) => FavoritBloc(
+                          FavoritRepository(dioClient: DioClient()),
+                        )..add(GetFavorit()),
+                  ),
+                ],
                 child: NavigationBarPage(),
               ),
         );
