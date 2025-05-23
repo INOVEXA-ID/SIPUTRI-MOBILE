@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:siputri_mobile/core/constants/api_constants.dart';
 import 'package:siputri_mobile/core/helper/token_storage.dart';
+import 'package:siputri_mobile/core/helper/user_model.dart';
 import 'package:siputri_mobile/core/services/dio_client.dart';
 
 class AuthRepository {
@@ -19,7 +20,9 @@ class AuthRepository {
       log(response.data.toString());
       if (response.statusCode == 200) {
         final token = response.data['token'];
+        final user = User.fromJson(response.data['user']);
         await TokenStorage().saveToken(token); // simpan token
+        await TokenStorage().saveUser(user); // simpan token
       } else {
         throw Exception('Login gagal');
       }

@@ -56,7 +56,6 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                           style: TextStyle(fontSize: 16),
                         ),
                         const SizedBox(height: 20),
-
                         // Rating dan ketersediaan
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -110,9 +109,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                             ),
                           ],
                         ),
-
                         const SizedBox(height: 24),
-
                         // Tombol Pinjam Buku
                         SizedBox(
                           width: double.infinity,
@@ -278,11 +275,10 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                       ],
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
-
           // Floating buttons
           Positioned(
             top: 40,
@@ -327,6 +323,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
   }
 }
 
+// Helper widgets (tidak berubah)
 Widget _verticalDivider() {
   return Container(
     height: 30,

@@ -15,7 +15,6 @@ class DioClient {
       ) {
     _addInterceptors();
   }
-
   void _addInterceptors() {
     dio.interceptors.add(
       InterceptorsWrapper(
