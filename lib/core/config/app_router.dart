@@ -5,7 +5,7 @@ import 'package:siputri_mobile/features/auth/bloc/auth_bloc.dart';
 import 'package:siputri_mobile/features/auth/repositories/auth_repository.dart';
 import 'package:siputri_mobile/features/auth/screens/index.dart';
 import 'package:siputri_mobile/features/bookshelf/bloc/bookshelf_bloc.dart';
-import 'package:siputri_mobile/features/detail_buku/detial_buku_screen.dart';
+import 'package:siputri_mobile/features/detail_buku/detail_buku_screen.dart';
 import 'package:siputri_mobile/features/favorit/bloc/favorit_bloc.dart';
 import 'package:siputri_mobile/features/favorit/repositories/favorit_repository.dart';
 import 'package:siputri_mobile/features/home/bloc/buku_bloc.dart';

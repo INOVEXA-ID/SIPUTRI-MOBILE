@@ -24,7 +24,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
         child: Stack(
           children: [
             SingleChildScrollView(
-              padding: EdgeInsets.only(top: 100),
+              padding: const EdgeInsets.only(top: 100),
               child: Column(
                 children: [
                   Center(
@@ -69,7 +69,6 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                           ),
                         ),
                         const SizedBox(height: 20),
-
                         // Rating dan ketersediaan
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -117,8 +116,8 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  '${book.jumlahBuku} Buku Tersedia',
-                                  style: TextStyle(
+                                  '${book.jumlahBuku ?? 0} Buku Tersedia',
+                                  style: const TextStyle(
                                     fontSize: 14,
                                     color: Colors.black54,
                                   ),
@@ -128,7 +127,6 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                           ],
                         ),
                         const SizedBox(height: 24),
-
                         // Tombol Pinjam Buku
                         SizedBox(
                           width: double.infinity,
@@ -164,7 +162,6 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                             ),
                           ),
                         ),
-
                         const SizedBox(height: 24),
                         // Statistik cepat
                         Row(
@@ -193,7 +190,6 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                           ],
                         ),
                         const SizedBox(height: 24),
-
                         // Deskripsi expandable
                         GestureDetector(
                           onTap:
@@ -247,7 +243,6 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                           ),
                         ),
                         const SizedBox(height: 24),
-
                         // Info Book
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
@@ -280,7 +275,6 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                           ),
                         ),
                         const SizedBox(height: 24),
-
                         // Ulasan
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -303,10 +297,10 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                       ],
                     ),
                   ),
-                ),
+                ],
               ),
             ),
-            // Floating buttons
+            // Floating Action Buttons (Back, Share, Favorite)
             Positioned(
               top: 20,
               left: 16,
@@ -317,18 +311,6 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                 onPressed: () => Navigator.pop(context),
                 child: const Icon(Icons.arrow_back, color: Colors.white),
               ),
-            ],
-          ),
-          // Floating buttons
-          Positioned(
-            top: 40,
-            left: 16,
-            child: FloatingActionButton(
-              mini: true,
-              backgroundColor: Colors.black.withOpacity(0.6),
-              heroTag: 'back',
-              onPressed: () => Navigator.pop(context),
-              child: const Icon(Icons.arrow_back, color: Colors.white),
             ),
             Positioned(
               top: 20,
