@@ -5,9 +5,11 @@ import 'package:siputri_mobile/features/auth/bloc/auth_bloc.dart';
 import 'package:siputri_mobile/features/auth/repositories/auth_repository.dart';
 import 'package:siputri_mobile/features/auth/screens/index.dart';
 import 'package:siputri_mobile/features/detail_buku/bloc/detail_buku_bloc.dart';
+import 'package:siputri_mobile/features/detail_buku/bloc/ulasan_kamu_bloc.dart';
 import 'package:siputri_mobile/features/detail_buku/repositories/detail_buku_repository.dart';
+import 'package:siputri_mobile/features/detail_buku/repositories/ulasan_kamu_repository.dart';
 import 'package:siputri_mobile/features/detail_buku/screens/daftar_tunggu_buku.dart';
-import 'package:siputri_mobile/features/detail_buku/screens/detial_buku_screen.dart';
+import 'package:siputri_mobile/features/detail_buku/screens/detail_buku_screen.dart';
 import 'package:siputri_mobile/features/favorit/bloc/favorit_bloc.dart';
 import 'package:siputri_mobile/features/favorit/repositories/favorit_repository.dart';
 import 'package:siputri_mobile/features/home/bloc/buku_bloc.dart';
@@ -99,11 +101,21 @@ class AppRouter {
         final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
           builder:
-              (context) => BlocProvider(
-                create:
-                    (_) =>
-                        DetailBukuBloc(DetailBukuRepository(DioClient()))
-                          ..add(GetDetailBuku(id: args['id'])),
+              (context) => MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                    create:
+                        (_) =>
+                            DetailBukuBloc(DetailBukuRepository(DioClient()))
+                              ..add(GetDetailBuku(id: args['id'])),
+                  ),
+                  BlocProvider(
+                    create:
+                        (_) =>
+                            UlasanKamuBloc(UlasanKamuRepository(DioClient()))
+                              ..add(GetUlasanKamu(id: args['id'])),
+                  ),
+                ],
                 child: BookDetailScreen(),
               ),
         );

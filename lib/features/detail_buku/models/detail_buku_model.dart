@@ -39,7 +39,7 @@ class Data {
   bool favorit;
   bool statusDipinjam;
   bool statusSelesai;
-  List<Ulasan> ulasan;
+  Ulasan? ulasan;
   Peminjaman? peminjaman;
 
   Data({
@@ -82,7 +82,7 @@ class Data {
     favorit: json["favorit"],
     statusDipinjam: json["status_dipinjam"],
     statusSelesai: json["status_selesai"],
-    ulasan: List<Ulasan>.from(json["ulasan"].map((x) => Ulasan.fromJson(x))),
+    ulasan: json["ulasan"] == null ? null : Ulasan.fromJson(json["ulasan"]),
     peminjaman:
         json["peminjaman"] == null
             ? null
@@ -107,7 +107,7 @@ class Data {
     "favorit": favorit,
     "status_dipinjam": statusDipinjam,
     "status_selesai": statusSelesai,
-    "ulasan": List<dynamic>.from(ulasan.map((x) => x.toJson())),
+    "ulasan": ulasan?.toJson(),
     "peminjaman": peminjaman?.toJson(),
   };
 }

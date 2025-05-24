@@ -133,7 +133,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             );
             Navigator.pushNamedAndRemoveUntil(
               context,
-              AppRouter.homeScreen,
+              AppRouter.navigationBarPage,
               (route) => false,
             );
           } else if (state is EditProfileFailure) {
@@ -313,7 +313,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                   ),
                   // Debug token (optional, hapus di production)
-                  TextFormField(initialValue: TokenStorage().token),
+                  // TextFormField(initialValue: TokenStorage().token),
                 ],
               ),
             ),

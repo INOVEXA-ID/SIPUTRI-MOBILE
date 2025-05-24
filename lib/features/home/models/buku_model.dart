@@ -33,7 +33,7 @@ class Datum {
   int jumlahHalaman;
   String path;
   String thumbnailUrl;
-  int rating;
+  String rating;
   DateTime createdAt;
   DateTime updatedAt;
 
