@@ -39,6 +39,7 @@ class Data {
   bool favorit;
   bool statusDipinjam;
   bool statusSelesai;
+  bool statusMengantri;
   Ulasan? ulasan;
   Peminjaman? peminjaman;
 
@@ -60,6 +61,7 @@ class Data {
     required this.favorit,
     required this.statusDipinjam,
     required this.statusSelesai,
+    required this.statusMengantri,
     required this.ulasan,
     required this.peminjaman,
   });
@@ -82,6 +84,7 @@ class Data {
     favorit: json["favorit"],
     statusDipinjam: json["status_dipinjam"],
     statusSelesai: json["status_selesai"],
+    statusMengantri: json["status_mengantri"],
     ulasan: json["ulasan"] == null ? null : Ulasan.fromJson(json["ulasan"]),
     peminjaman:
         json["peminjaman"] == null
@@ -120,6 +123,7 @@ class Peminjaman {
   int antreanKe;
   int idBuku;
   int idUser;
+  String? durasiTersisa;
   DateTime createdAt;
   DateTime updatedAt;
 
@@ -131,6 +135,7 @@ class Peminjaman {
     required this.antreanKe,
     required this.idBuku,
     required this.idUser,
+    required this.durasiTersisa,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -143,6 +148,7 @@ class Peminjaman {
     antreanKe: json["antrean_ke"],
     idBuku: json["id_buku"],
     idUser: json["id_user"],
+    durasiTersisa: json["durasi_tersisa"],
     createdAt: DateTime.parse(json["created_at"]),
     updatedAt: DateTime.parse(json["updated_at"]),
   );
@@ -155,6 +161,7 @@ class Peminjaman {
     "antrean_ke": antreanKe,
     "id_buku": idBuku,
     "id_user": idUser,
+    "durasi_tersisa": durasiTersisa,
     "created_at": createdAt.toIso8601String(),
     "updated_at": updatedAt.toIso8601String(),
   };

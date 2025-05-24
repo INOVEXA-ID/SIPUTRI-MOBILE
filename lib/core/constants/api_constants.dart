@@ -13,4 +13,9 @@ class ApiConstants {
   static String ulasanKamuEndpoint = '/daftar-ulasan-by-user';
   static String updateUlasanEndpoint = '/updateUlasan';
   static String postUlasanEndpoint = '/ulasan';
+  static String pinjamBukuEndpoint = '/pinjam';
+  static String kembalikanBukuEndpoint = '/kembalikan';
+  static String antrianBukuEndpoint = '/antri';
+  static String daftarAntrianEndpoint = '/daftarAntrean';
+  static String batalAntrianEndpoint = '/batal-antrean';
 }
