@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:siputri_mobile/core/config/app_router.dart';
-import 'package:siputri_mobile/core/constants/api_constants.dart';
 import 'package:siputri_mobile/core/widgets/gap.dart';
 import 'package:siputri_mobile/features/home/bloc/buku_bloc.dart';
 import 'package:siputri_mobile/features/home/components/app_bar.dart';
 import 'package:siputri_mobile/features/home/components/book_card.dart';
-import 'package:siputri_mobile/features/detail_buku/screens/detail_buku_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -32,7 +30,10 @@ class HomeScreen extends StatelessWidget {
                 Gap(Y: 2),
                 Expanded(
                   child: RefreshIndicator(
-                    onRefresh: () => Future.delayed(const Duration(seconds: 1)),
+                    onRefresh: () {
+                      context.read<BukuBloc>().add(LoadBuku());
+                      return Future.delayed(const Duration(seconds: 1));
+                    },
                     child: GridView.builder(
                       shrinkWrap: true,
                       physics: const BouncingScrollPhysics(),
