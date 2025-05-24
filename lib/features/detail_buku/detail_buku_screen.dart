@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:siputri_mobile/features/bookshelf/bloc/bookshelf_bloc.dart';
 import 'package:siputri_mobile/features/home/models/buku_model.dart';
+import 'package:siputri_mobile/core/helper/image_helper.dart'; // <--- helper getFullImageUrl
 
 class BookDetailScreen extends StatefulWidget {
   final Datum book;
@@ -19,6 +18,8 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final book = widget.book;
+    final thumbnailUrl = getFullImageUrl(book.thumbnailUrl);
+
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -28,20 +29,38 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
               child: Column(
                 children: [
                   Center(
-                    child: Image.network(
-                      book.thumbnail != null && book.thumbnail!.isNotEmpty
-                          ? book.thumbnail!
-                          : "https://via.placeholder.com/180x260",
-                      height: 260,
-                      width: 180,
-                      fit: BoxFit.cover,
-                      errorBuilder:
-                          (context, error, stackTrace) => Container(
-                            height: 260,
-                            width: 180,
-                            color: Colors.grey[300],
-                            child: const Icon(Icons.broken_image, size: 60),
-                          ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.grey.shade200,
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child:
+                            thumbnailUrl != null
+                                ? Image.network(
+                                  thumbnailUrl,
+                                  height: 260,
+                                  width: 180,
+                                  fit: BoxFit.cover,
+                                  errorBuilder:
+                                      (context, error, stackTrace) => Container(
+                                        height: 260,
+                                        width: 180,
+                                        color: Colors.grey[300],
+                                        child: const Icon(
+                                          Icons.broken_image,
+                                          size: 60,
+                                        ),
+                                      ),
+                                )
+                                : Image.asset(
+                                  'assets/images/4.jpeg',
+                                  height: 260,
+                                  width: 180,
+                                  fit: BoxFit.cover,
+                                ),
+                      ),
                     ),
                   ),
                   Padding(
@@ -77,13 +96,14 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
-                                  children: List.generate(5, (index) {
-                                    return const Icon(
+                                  children: List.generate(
+                                    5,
+                                    (index) => const Icon(
                                       Icons.star,
                                       color: Colors.amber,
                                       size: 20,
-                                    );
-                                  }),
+                                    ),
+                                  ),
                                 ),
                                 const SizedBox(height: 4),
                                 const Text(
@@ -131,11 +151,15 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton.icon(
-                            onPressed: () {
-                              setState(() {
-                                isBorrowed = true;
-                              });
-                            },
+                            onPressed:
+                                isBorrowed
+                                    ? null
+                                    : () {
+                                      // TODO: Trigger Bloc event untuk pinjam buku di sini jika perlu
+                                      setState(() {
+                                        isBorrowed = true;
+                                      });
+                                    },
                             icon: Icon(
                               isBorrowed
                                   ? Icons.check_circle
@@ -175,12 +199,16 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                             _buildStatItem(Icons.copy, '1', Colors.black87),
                             _verticalDivider(),
                             Row(
-                              children: const [
-                                Icon(Icons.check_circle, color: Colors.teal),
-                                SizedBox(width: 4),
+                              children: [
+                                const Icon(
+                                  Icons.check_circle,
+                                  color: Colors.teal,
+                                  size: 18,
+                                ),
+                                const SizedBox(width: 4),
                                 Text(
-                                  '1 Tersedia',
-                                  style: TextStyle(color: Colors.teal),
+                                  '${book.jumlahBuku ?? 0} Tersedia',
+                                  style: const TextStyle(color: Colors.teal),
                                 ),
                               ],
                             ),
@@ -317,7 +345,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                 backgroundColor: Colors.black.withOpacity(0.6),
                 heroTag: 'share',
                 onPressed: () {
-                  // Fungsi share di sini
+                  // TODO: Implement share
                 },
                 child: const Icon(Icons.share, color: Colors.white),
               ),
@@ -330,7 +358,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                 backgroundColor: Colors.black.withOpacity(0.6),
                 heroTag: 'favorite',
                 onPressed: () {
-                  // Fungsi favorite di sini
+                  // TODO: Implement favorite
                 },
                 child: const Icon(Icons.favorite_border, color: Colors.white),
               ),
@@ -342,6 +370,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
   }
 }
 
+// Helper widgets
 Widget _verticalDivider() {
   return Container(
     height: 30,

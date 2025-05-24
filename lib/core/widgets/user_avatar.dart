@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:siputri_mobile/core/helper/token_storage.dart';
+import 'package:siputri_mobile/core/helper/image_helper.dart'; // Tambahkan ini
 import 'package:siputri_mobile/core/helper/user_model.dart';
 import 'package:siputri_mobile/core/constants/color_constants.dart';
 import 'my_text.dart'; // jika MyText custom, import di sini
@@ -11,7 +12,9 @@ class UserAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = TokenStorage().user;
-    if (user != null && user.foto != null && user.foto!.isNotEmpty) {
+    final fotoUrl = getFullFotoUrl(user?.foto);
+
+    if (user != null && fotoUrl != null && fotoUrl.isNotEmpty) {
       return Container(
         width: size,
         height: size,
@@ -21,7 +24,7 @@ class UserAvatar extends StatelessWidget {
         ),
         child: ClipOval(
           child: Image.network(
-            user.foto!,
+            fotoUrl,
             fit: BoxFit.cover,
             width: size,
             height: size,

@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:siputri_mobile/core/constants/api_constants.dart';
+import 'package:siputri_mobile/core/helper/image_helper.dart';
 import 'package:siputri_mobile/core/helper/token_storage.dart';
 import 'package:siputri_mobile/edit_profile/bloc/edit_profile_bloc.dart';
 import 'package:siputri_mobile/edit_profile/edit_profile_screen.dart';
@@ -60,9 +61,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   // Gambar profil
                   CircleAvatar(
                     radius: 50,
-                    backgroundImage: NetworkImage(
-                      "${ApiConstants.baseUrlImage}/storage/${state.fotoUrl}",
-                    ),
+                    backgroundImage:
+                        (state.fotoUrl != null && state.fotoUrl!.isNotEmpty)
+                            ? NetworkImage(getFullFotoUrl(state.fotoUrl)!)
+                            : const AssetImage('assets/images/4.jpeg')
+                                as ImageProvider,
                   ),
                   const SizedBox(height: 16),
                   // Nama dan Email
