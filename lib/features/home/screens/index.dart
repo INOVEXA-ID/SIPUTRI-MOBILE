@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:siputri_mobile/core/config/app_router.dart';
 import 'package:siputri_mobile/core/constants/api_constants.dart';
 import 'package:siputri_mobile/core/widgets/gap.dart';
 import 'package:siputri_mobile/features/home/bloc/buku_bloc.dart';
@@ -51,11 +52,10 @@ class HomeScreen extends StatelessWidget {
                         final book = state.buku.data[index];
                         return InkWell(
                           onTap:
-                              () => Navigator.push(
+                              () => Navigator.pushNamed(
                                 context,
-                                MaterialPageRoute(
-                                  builder: (_) => BookDetailScreen(book: book),
-                                ),
+                                AppRouter.detailBukuPage,
+                                arguments: {'id': book.idBuku.toString()},
                               ),
                           child: BookCard(
                             title: book.judul,

@@ -4,7 +4,10 @@ import 'package:siputri_mobile/core/services/dio_client.dart';
 import 'package:siputri_mobile/features/auth/bloc/auth_bloc.dart';
 import 'package:siputri_mobile/features/auth/repositories/auth_repository.dart';
 import 'package:siputri_mobile/features/auth/screens/index.dart';
+import 'package:siputri_mobile/features/detail_buku/bloc/detail_buku_bloc.dart';
+import 'package:siputri_mobile/features/detail_buku/repositories/detail_buku_repository.dart';
 import 'package:siputri_mobile/features/detail_buku/screens/daftar_tunggu_buku.dart';
+import 'package:siputri_mobile/features/detail_buku/screens/detial_buku_screen.dart';
 import 'package:siputri_mobile/features/favorit/bloc/favorit_bloc.dart';
 import 'package:siputri_mobile/features/favorit/repositories/favorit_repository.dart';
 import 'package:siputri_mobile/features/home/bloc/buku_bloc.dart';
@@ -29,6 +32,7 @@ class AppRouter {
   static const navigationBarPage = "/navigation-bar";
   static const pdfRenderPage = "/pdf-render";
   static const daftarTungguBukuPage = "/daftar-tunggu-buku";
+  static const detailBukuPage = "/detail-buku";
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -89,6 +93,18 @@ class AppRouter {
               (context) => BlocProvider(
                 create: (_) => RegisterBloc(RegisterRepository(DioClient())),
                 child: RegisterScreen(),
+              ),
+        );
+      case detailBukuPage:
+        final args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+          builder:
+              (context) => BlocProvider(
+                create:
+                    (_) =>
+                        DetailBukuBloc(DetailBukuRepository(DioClient()))
+                          ..add(GetDetailBuku(id: args['id'])),
+                child: BookDetailScreen(),
               ),
         );
       default:
