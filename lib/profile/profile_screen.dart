@@ -26,7 +26,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String? getFullImageUrl(String? path) {
     if (path == null || path.isEmpty) return null;
     if (path.startsWith('http')) return path;
-    final base = ApiConstants.baseUrlImage;
+    final base = ApiConstants.baseURLFoto;
     if (base == null) return null;
     if (path.startsWith('/')) {
       return '$base$path';

@@ -107,7 +107,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (url.startsWith('http')) return url;
     // pastikan tidak ada double slash
     if (ApiConstants.baseUrlImage == null) return null;
-    final base = ApiConstants.baseUrlImage!;
+    final base = ApiConstants.baseURLFoto!;
     if (url.startsWith('/')) {
       return '$base$url';
     } else {
@@ -309,7 +309,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                   ),
                   // Debug token (optional, hapus di production)
-                  TextFormField(initialValue: TokenStorage().token),
+                  // TextFormField(initialValue: TokenStorage().token),
                 ],
               ),
             ),
