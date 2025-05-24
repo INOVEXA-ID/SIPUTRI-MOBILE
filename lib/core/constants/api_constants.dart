@@ -10,6 +10,10 @@ class ApiConstants {
   static String bukuEndpoint = '/cariBuku?search=';
   static String updateProfileEndpoint = '/user/updateProfile';
   static String favoritEndpoint = '/favorit';
+  static String detailBukuEndpoint = '/buku';
+  static String ulasanKamuEndpoint = '/daftar-ulasan-by-user';
+  static String updateUlasanEndpoint = '/updateUlasan';
+  static String postUlasanEndpoint = '/ulasan';
   static String sedangDibacaEndpoint = '/peminjaman/dipinjam';
   static String riwayatPeminjamanEndpoint = '/peminjaman/selesai';
 }

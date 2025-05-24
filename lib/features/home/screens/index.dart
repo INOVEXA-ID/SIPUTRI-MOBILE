@@ -7,7 +7,7 @@ import 'package:siputri_mobile/core/widgets/gap.dart';
 import 'package:siputri_mobile/features/home/bloc/buku_bloc.dart';
 import 'package:siputri_mobile/features/home/components/app_bar.dart';
 import 'package:siputri_mobile/features/home/components/book_card.dart';
-import 'package:siputri_mobile/features/detail_buku/detail_buku_screen.dart';
+import 'package:siputri_mobile/features/detail_buku/screens/detail_buku_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -53,20 +53,15 @@ class HomeScreen extends StatelessWidget {
                         final book = state.buku.data[index];
                         return InkWell(
                           onTap:
-                              () => Navigator.push(
+                              () => Navigator.pushNamed(
                                 context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (context) => BookDetailScreen(book: book),
-                                ),
+                                AppRouter.detailBukuPage,
+                                arguments: {'id': book.idBuku.toString()},
                               ),
                           child: BookCard(
-                            title: book.judul ?? "tidak ada buku",
-                            description:
-                                book.deskripsi ?? "tidak ada deskripsi",
-                            thumbnail:
-                                getFullImageUrl(book.thumbnail) ??
-                                "https://via.placeholder.com/150",
+                            title: book.judul,
+                            description: book.deskripsi,
+                            thumbnail: book.thumbnailUrl,
                           ),
                         );
                       },

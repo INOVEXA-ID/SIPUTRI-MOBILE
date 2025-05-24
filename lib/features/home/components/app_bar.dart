@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:siputri_mobile/core/constants/color_constants.dart';
 import 'package:siputri_mobile/core/helper/token_storage.dart';
 import 'package:siputri_mobile/core/widgets/gap.dart';
-import 'package:siputri_mobile/core/widgets/my_text.dart';
 import 'package:siputri_mobile/core/widgets/user_avatar.dart';
 import 'package:siputri_mobile/profile/bloc/profile_bloc.dart';
 import 'package:siputri_mobile/features/navigation/bloc/navigation_bloc.dart';
@@ -49,7 +47,7 @@ class AppBarHome extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Halo, ${user?.nama}!',
+                    'Halo, ${user?.nama}',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 19,

@@ -60,11 +60,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   // Gambar profil
                   CircleAvatar(
                     radius: 50,
-                    backgroundImage:
-                        (state.fotoUrl != null && state.fotoUrl!.isNotEmpty)
-                            ? NetworkImage(getFullImageUrl(state.fotoUrl)!)
-                            : const AssetImage('assets/images/4.jpeg')
-                                as ImageProvider,
+                    backgroundImage: NetworkImage(
+                      "${ApiConstants.baseUrlImage}/storage/${state.fotoUrl}",
+                    ),
                   ),
                   const SizedBox(height: 16),
                   // Nama dan Email
