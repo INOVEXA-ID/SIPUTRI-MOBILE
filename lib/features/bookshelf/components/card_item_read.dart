@@ -23,7 +23,7 @@ class CardItemRead extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final buku = peminjaman.buku;
-    final thumbnailUrl = getFullImageUrl(buku.thumbnail ?? "");
+    final thumbnailUrl = getFullImageUrl(buku.thumbnail);
     debugPrint("URL gambar : $thumbnailUrl");
 
     // Format tanggal

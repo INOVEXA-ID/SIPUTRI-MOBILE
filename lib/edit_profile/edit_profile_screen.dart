@@ -131,11 +131,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Profil berhasil diperbarui')),
             );
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              AppRouter.homeScreen,
-              (route) => false,
-            );
+            Navigator.pop(context);
           } else if (state is EditProfileFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Gagal update profil: ${state.message}')),

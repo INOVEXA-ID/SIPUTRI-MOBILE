@@ -24,6 +24,7 @@ class CardItemHistory extends StatelessWidget {
   Widget build(BuildContext context) {
     final buku = peminjaman.buku;
     final thumbnailUrl = getFullImageUrl2(buku.thumbnail);
+    debugPrint("URL gambar : $thumbnailUrl");
 
     // Format tanggal
     String formatTanggal(String? tanggal) {
