@@ -20,9 +20,6 @@ import 'package:siputri_mobile/features/detail_buku/repositories/pinjam_buku_rep
 import 'package:siputri_mobile/features/detail_buku/repositories/ulasan_kamu_repository.dart';
 import 'package:siputri_mobile/features/detail_buku/screens/daftar_tunggu_buku.dart';
 import 'package:siputri_mobile/features/detail_buku/screens/detail_buku_screen.dart';
-import 'package:siputri_mobile/features/bookshelf/bloc/bookshelf_bloc.dart';
-import 'package:siputri_mobile/features/bookshelf/repository/peminjaman_buku_repository.dart';
-import 'package:siputri_mobile/features/detail_buku/detail_buku_screen.dart';
 import 'package:siputri_mobile/features/favorit/bloc/favorit_bloc.dart';
 import 'package:siputri_mobile/features/favorit/repositories/favorit_repository.dart';
 import 'package:siputri_mobile/features/home/bloc/buku_bloc.dart';
@@ -49,7 +46,6 @@ class AppRouter {
   static const pdfRenderPage = "/pdf-render";
   static const daftarTungguBukuPage = "/daftar-tunggu-buku";
   static const detailBukuPage = "/detail-buku";
-  static const detailBookScreen = "/BookDetailScreen";
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -99,14 +95,6 @@ class AppRouter {
                         (_) => FavoritBloc(
                           FavoritRepository(dioClient: DioClient()),
                         )..add(GetFavorit()),
-                  ),
-                  BlocProvider(
-                    create:
-                        (_) => BookshelfBloc(
-                          peminjamanRepository: PeminjamanBukuRepository(
-                            DioClient(),
-                          ),
-                        )..add(FetchReadingList()),
                   ),
                 ],
                 child: NavigationBarPage(),
