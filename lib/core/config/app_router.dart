@@ -23,6 +23,8 @@ import 'package:siputri_mobile/features/detail_buku/screens/detail_buku_screen.d
 import 'package:siputri_mobile/features/favorit/bloc/favorit_bloc.dart';
 import 'package:siputri_mobile/features/favorit/repositories/favorit_repository.dart';
 import 'package:siputri_mobile/features/home/bloc/buku_bloc.dart';
+import 'package:siputri_mobile/features/home/bloc/buku_dibaca_bloc.dart';
+import 'package:siputri_mobile/features/home/repositories/buku_dibaca_repository.dart';
 import 'package:siputri_mobile/features/home/repositories/buku_repository.dart';
 import 'package:siputri_mobile/features/home/screens/index.dart';
 import 'package:siputri_mobile/features/navigation/bloc/navigation_bloc.dart';
@@ -76,6 +78,12 @@ class AppRouter {
                         (context) =>
                             BukuBloc(BukuRepository(DioClient()))
                               ..add(LoadBuku()),
+                  ),
+                  BlocProvider(
+                    create:
+                        (_) =>
+                            BukuDibacaBloc(BukuDibacaRepository(DioClient()))
+                              ..add(GetBukuDibacaEvent()),
                   ),
                   BlocProvider(
                     create:

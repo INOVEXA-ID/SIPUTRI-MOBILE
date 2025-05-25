@@ -3,19 +3,46 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:siputri_mobile/core/config/app_router.dart';
 import 'package:siputri_mobile/core/widgets/gap.dart';
 import 'package:siputri_mobile/features/home/bloc/buku_bloc.dart';
+import 'package:siputri_mobile/features/home/bloc/buku_dibaca_bloc.dart';
 import 'package:siputri_mobile/features/home/components/app_bar.dart';
 import 'package:siputri_mobile/features/home/components/book_card.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  double getAppBarHeight(BukuDibacaState state) {
+    if (state is BukuDibacaLoaded && state.bukuDibacaModel.data != null) {
+      return 275;
+    }
+    return 140;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final state = context.watch<BukuDibacaBloc>().state;
+    final sizeHeight = getAppBarHeight(state);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(140),
-        child: AppBarHome(),
+        preferredSize: Size.fromHeight(sizeHeight),
+        child: BlocBuilder<BukuDibacaBloc, BukuDibacaState>(
+          builder: (context, state) {
+            if (state is BukuDibacaLoading) {
+              return AppBarHome(isReading: false);
+            } else if (state is BukuDibacaLoaded) {
+              return AppBarHome(
+                isReading: (state.bukuDibacaModel.data != null) ? true : false,
+                bukuDibaca: state.bukuDibacaModel,
+              );
+            }
+            return AppBarHome(isReading: false);
+          },
+        ),
       ),
       body: BlocBuilder<BukuBloc, BukuState>(
         builder: (context, state) {

@@ -18,4 +18,5 @@ class ApiConstants {
   static String antrianBukuEndpoint = '/antri';
   static String daftarAntrianEndpoint = '/daftarAntrean';
   static String batalAntrianEndpoint = '/batal-antrean';
+  static String bukuDibacaEndpoint = '/statusBuku-byUser';
 }
