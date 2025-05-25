@@ -1,7 +1,6 @@
 import 'package:siputri_mobile/core/constants/api_constants.dart';
 import 'package:siputri_mobile/features/favorit/bloc/favorit_bloc.dart';
 import 'package:siputri_mobile/features/favorit/components/empty.dart';
-import 'package:siputri_mobile/features/home/bloc/buku_bloc.dart';
 
 import '../export/index.dart';
 
@@ -48,6 +47,7 @@ class FavoritScreen extends StatelessWidget {
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 10),
                         child: CardItems(
+                          idBuku: favorit.idBuku.toString(),
                           title: favorit.judul,
                           penulis: favorit.penulis,
                           rating: "4.5",

@@ -7,6 +7,7 @@ import 'package:siputri_mobile/core/helper/token_storage.dart';
 import 'package:siputri_mobile/edit_profile/bloc/edit_profile_bloc.dart';
 import 'package:siputri_mobile/edit_profile/edit_profile_screen.dart';
 import 'package:siputri_mobile/edit_profile/repositories/profile_repository.dart';
+import 'package:siputri_mobile/features/bookshelf/export/index.dart';
 import 'package:siputri_mobile/profile/bloc/profile_bloc.dart'; // pastikan path-nya benar
 
 class ProfileScreen extends StatefulWidget {
@@ -59,15 +60,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   const SizedBox(height: 24),
                   // Gambar profil
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundImage:
-                        (state.fotoUrl != null && state.fotoUrl!.isNotEmpty)
-                            ? NetworkImage(getFullFotoUrl(state.fotoUrl)!)
-                            : const AssetImage('assets/images/4.jpeg')
-                                as ImageProvider,
-                  ),
-                  const SizedBox(height: 16),
+                  state.fotoUrl == null
+                      ? CircleAvatar(
+                        radius: 50,
+                        backgroundColor: ColorConstants.primaryColor,
+                        child: MyText(
+                          title: state.nama[0],
+                          color: Colors.white,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                      : CircleAvatar(
+                        radius: 50,
+                        backgroundImage: NetworkImage(
+                          getFullFotoUrl(state.fotoUrl)!,
+                        ),
+                      ),
+                  const SizedBox(height: 10),
                   // Nama dan Email
                   Text(
                     state.nama,
@@ -125,10 +135,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   // Pengaturan Aplikasi
                   const Divider(),
-                  _buildSettingItem(Icons.lock, 'Ganti Password'),
-                  _buildSettingItem(Icons.notifications, 'Notifikasi'),
-                  _buildSettingItem(Icons.language, 'Bahasa'),
-                  _buildSettingItem(Icons.info, 'Tentang Aplikasi'),
+                  // _buildSettingItem(Icons.lock, 'Ganti Password'),
+                  // _buildSettingItem(Icons.notifications, 'Notifikasi'),
+                  // _buildSettingItem(Icons.language, 'Bahasa'),
+                  // _buildSettingItem(Icons.info, 'Tentang Aplikasi'),
                   _buildSettingItem(
                     Icons.logout,
                     'Keluar',

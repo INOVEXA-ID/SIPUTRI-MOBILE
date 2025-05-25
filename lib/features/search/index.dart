@@ -89,12 +89,13 @@ class _SearchScreenState extends State<SearchScreen> {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 10),
                       child: CardItemSearch(
+                        idBuku: book.idBuku.toString(),
                         title: book.judul,
                         penulis: book.penulis,
                         rating: book.rating,
                         description: book.deskripsi,
                         image:
-                            (thumbnailUrl != null && thumbnailUrl.isNotEmpty)
+                            (thumbnailUrl.isNotEmpty)
                                 ? thumbnailUrl
                                 : 'assets/images/4.jpeg',
                         jmlUlasan: 0, // Isi sesuai field jika ada di model

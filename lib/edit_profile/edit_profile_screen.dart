@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:siputri_mobile/core/constants/api_constants.dart';
+import 'package:siputri_mobile/core/constants/color_constants.dart';
 import 'package:siputri_mobile/core/helper/token_storage.dart';
 import 'package:siputri_mobile/core/helper/user_model.dart';
+import 'package:siputri_mobile/core/widgets/my_text.dart';
 import 'package:siputri_mobile/edit_profile/bloc/edit_profile_bloc.dart';
 import 'package:siputri_mobile/edit_profile/bloc/edit_profile_event.dart';
 import 'package:siputri_mobile/edit_profile/bloc/edit_profile_state.dart';
@@ -156,19 +158,32 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       onTap: _showImagePickerOptions,
                       child: Stack(
                         children: [
-                          CircleAvatar(
-                            radius: 50,
-                            backgroundImage:
-                                _imageFile != null
-                                    ? FileImage(_imageFile!)
-                                    : (_networkImageUrl != null &&
-                                        _networkImageUrl!.isNotEmpty)
-                                    ? NetworkImage(
-                                      _fullImageUrl(_networkImageUrl!)!,
-                                    )
-                                    : const AssetImage('assets/images/4.jpeg')
-                                        as ImageProvider,
-                          ),
+                          _imageFile == null
+                              ? CircleAvatar(
+                                radius: 50,
+                                backgroundColor: ColorConstants.primaryColor,
+                                child: MyText(
+                                  title: _nameController.text[0],
+                                  color: Colors.white,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                              : CircleAvatar(
+                                radius: 50,
+                                backgroundImage:
+                                    _imageFile != null
+                                        ? FileImage(_imageFile!)
+                                        : (_networkImageUrl != null &&
+                                            _networkImageUrl!.isNotEmpty)
+                                        ? NetworkImage(
+                                          _fullImageUrl(_networkImageUrl!)!,
+                                        )
+                                        : const AssetImage(
+                                              'assets/images/4.jpeg',
+                                            )
+                                            as ImageProvider,
+                              ),
                           Positioned(
                             bottom: 0,
                             right: 4,
