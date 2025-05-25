@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:siputri_mobile/features/detail_buku/bloc/ulasan_global_bloc.dart';
 import 'package:siputri_mobile/features/home/models/buku_model.dart';
 import 'package:siputri_mobile/core/helper/image_helper.dart'; // <--- helper getFullImageUrl
 
@@ -307,14 +309,42 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
-                                'Apa yang orang lain katakan',
+                                'Apa yang orang lain katakan 11111',
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               const SizedBox(height: 12),
-                              _buildUlasanSection(),
+                              BlocBuilder<UlasanGlobalBloc, UlasanGlobalState>(
+                                builder: (context, state) {
+                                  if (state is UlasanGlobalLoading) {
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  } else if (state is UlasanGlobalLoaded) {
+                                    final ulasanG =
+                                        state.ulasanGlobalModel.ulasan;
+                                    return ListView.builder(
+                                      itemCount: ulasanG.length,
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemBuilder: (context, index) {
+                                        return _buildUlasanSection(
+                                          image: ulasanG[index].user.foto,
+                                          name: ulasanG[index].user.nama,
+                                          review: ulasanG[index].ulasan,
+                                          rating: ulasanG[index].rating,
+                                        );
+                                      },
+                                    );
+                                  } else if (state is UlasanGlobalFailed) {
+                                    return Center(child: Text(state.message));
+                                  }
+                                  return Text("terjadi kesalahan");
+                                },
+                              ),
                             ],
                           ),
                         ),
@@ -416,32 +446,23 @@ Widget _buildInfoColumn({
   );
 }
 
-Widget _buildUlasanSection() {
-  final List<String> ulasan = [];
-  if (ulasan.isEmpty) {
-    return const Text(
-      'Belum ada ulasan',
-      style: TextStyle(fontSize: 14, color: Colors.black54),
-    );
-  }
-  return Column(
-    children:
-        ulasan
-            .map(
-              (review) => Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.grey.shade300),
-                  ),
-                  child: Text(review, style: const TextStyle(fontSize: 14)),
-                ),
-              ),
-            )
-            .toList(),
+Widget _buildUlasanSection({
+  required String? image,
+  required String name,
+  required String review,
+  required String rating,
+}) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 12),
+    child: Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade100,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Colors.grey.shade300),
+      ),
+      child: Text("HOOOOTYYYYYy", style: const TextStyle(fontSize: 14)),
+    ),
   );
 }

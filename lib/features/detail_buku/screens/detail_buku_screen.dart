@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:siputri_mobile/core/config/app_router.dart';
@@ -10,12 +8,10 @@ import 'package:siputri_mobile/core/widgets/gap.dart';
 import 'package:siputri_mobile/core/widgets/my_text.dart';
 import 'package:siputri_mobile/features/detail_buku/bloc/antrian_buku_bloc.dart';
 import 'package:siputri_mobile/features/detail_buku/bloc/batal_antrian_bloc.dart';
-import 'package:siputri_mobile/features/detail_buku/bloc/daftar_antrian_bloc.dart';
 import 'package:siputri_mobile/features/detail_buku/bloc/detail_buku_bloc.dart';
 import 'package:siputri_mobile/features/detail_buku/bloc/kembalikan_buku_bloc.dart';
 import 'package:siputri_mobile/features/detail_buku/bloc/pinjam_buku_bloc.dart';
 import 'package:siputri_mobile/features/detail_buku/bloc/ulasan_kamu_bloc.dart';
-import 'package:siputri_mobile/features/detail_buku/components/first_btn.dart';
 import 'package:siputri_mobile/features/detail_buku/components/ulasan_global.dart';
 import 'package:siputri_mobile/features/detail_buku/components/ulasan_kamu.dart';
 import 'package:siputri_mobile/features/detail_buku/components/write_review.dart';
@@ -464,7 +460,9 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                         padding: const EdgeInsets.only(
                                           bottom: 5,
                                         ),
-                                        child: UlasanGlobal(),
+                                        child: UlasanGlobal(
+                                          idBuku: book.idBuku.toString(),
+                                        ),
                                       ),
                                     ],
                                   ),

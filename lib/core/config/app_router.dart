@@ -10,6 +10,7 @@ import 'package:siputri_mobile/features/detail_buku/bloc/daftar_antrian_bloc.dar
 import 'package:siputri_mobile/features/detail_buku/bloc/detail_buku_bloc.dart';
 import 'package:siputri_mobile/features/detail_buku/bloc/kembalikan_buku_bloc.dart';
 import 'package:siputri_mobile/features/detail_buku/bloc/pinjam_buku_bloc.dart';
+import 'package:siputri_mobile/features/detail_buku/bloc/ulasan_global_bloc.dart';
 import 'package:siputri_mobile/features/detail_buku/bloc/ulasan_kamu_bloc.dart';
 import 'package:siputri_mobile/features/detail_buku/repositories/antrian_buku_repository.dart';
 import 'package:siputri_mobile/features/detail_buku/repositories/batal_antrian_repository.dart';
@@ -17,6 +18,7 @@ import 'package:siputri_mobile/features/detail_buku/repositories/daftar_antrian_
 import 'package:siputri_mobile/features/detail_buku/repositories/detail_buku_repository.dart';
 import 'package:siputri_mobile/features/detail_buku/repositories/kembalikan_buku_repository.dart';
 import 'package:siputri_mobile/features/detail_buku/repositories/pinjam_buku_repository.dart';
+import 'package:siputri_mobile/features/detail_buku/repositories/ulasan_global_repository.dart';
 import 'package:siputri_mobile/features/detail_buku/repositories/ulasan_kamu_repository.dart';
 import 'package:siputri_mobile/features/detail_buku/screens/daftar_tunggu_buku.dart';
 import 'package:siputri_mobile/features/detail_buku/screens/detail_buku_screen.dart';
@@ -162,6 +164,20 @@ class AppRouter {
                           BatalAntrianRepository(DioClient()),
                         ),
                   ),
+
+                  BlocProvider(
+                    create:
+                        (_) => UlasanGlobalBloc(
+                          UlasanGlobalRepository(DioClient()),
+                        ),
+                  ),
+                  // BlocProvider(
+                  //   create:
+                  //       (_) => UlasanGlobalBloc(
+                  //         UlasanGlobalRepository(DioClient())
+                  //           ..getUlasanGlobal(id: args['id']),
+                  //       ),
+                  // ),
                 ],
                 child: BookDetailScreen(),
               ),
