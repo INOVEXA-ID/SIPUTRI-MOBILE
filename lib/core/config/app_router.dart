@@ -8,6 +8,7 @@ import 'package:siputri_mobile/features/detail_buku/bloc/antrian_buku_bloc.dart'
 import 'package:siputri_mobile/features/detail_buku/bloc/batal_antrian_bloc.dart';
 import 'package:siputri_mobile/features/detail_buku/bloc/daftar_antrian_bloc.dart';
 import 'package:siputri_mobile/features/detail_buku/bloc/detail_buku_bloc.dart';
+import 'package:siputri_mobile/features/detail_buku/bloc/favorit_tambah_bloc.dart';
 import 'package:siputri_mobile/features/detail_buku/bloc/kembalikan_buku_bloc.dart';
 import 'package:siputri_mobile/features/detail_buku/bloc/pinjam_buku_bloc.dart';
 import 'package:siputri_mobile/features/detail_buku/bloc/ulasan_global_bloc.dart';
@@ -16,6 +17,7 @@ import 'package:siputri_mobile/features/detail_buku/repositories/antrian_buku_re
 import 'package:siputri_mobile/features/detail_buku/repositories/batal_antrian_repository.dart';
 import 'package:siputri_mobile/features/detail_buku/repositories/daftar_antrian_repository.dart';
 import 'package:siputri_mobile/features/detail_buku/repositories/detail_buku_repository.dart';
+import 'package:siputri_mobile/features/detail_buku/repositories/favorit_detail_buku_repository.dart';
 import 'package:siputri_mobile/features/detail_buku/repositories/kembalikan_buku_repository.dart';
 import 'package:siputri_mobile/features/detail_buku/repositories/pinjam_buku_repository.dart';
 import 'package:siputri_mobile/features/detail_buku/repositories/ulasan_global_repository.dart';
@@ -169,6 +171,12 @@ class AppRouter {
                     create:
                         (_) => UlasanGlobalBloc(
                           UlasanGlobalRepository(DioClient()),
+                        ),
+                  ),
+                  BlocProvider(
+                    create:
+                        (_) => FavoritTambahBloc(
+                          FavoritDetailBukuRepository(DioClient()),
                         ),
                   ),
                   // BlocProvider(

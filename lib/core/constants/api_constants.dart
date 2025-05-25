@@ -23,4 +23,7 @@ class ApiConstants {
   static String sedangDibacaEndpoint = '/peminjaman/dipinjam';
   static String riwayatPeminjamanEndpoint = '/peminjaman/selesai';
   static String ulasanGlobalEndpoint = '/daftarUlasan';
+
+  static String favoritTambahEndpoint = '/favorit/tambah';
+  static String favoritHapusEndpoint = '/favorit/hapus';
 }

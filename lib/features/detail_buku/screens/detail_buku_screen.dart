@@ -9,6 +9,7 @@ import 'package:siputri_mobile/core/widgets/my_text.dart';
 import 'package:siputri_mobile/features/detail_buku/bloc/antrian_buku_bloc.dart';
 import 'package:siputri_mobile/features/detail_buku/bloc/batal_antrian_bloc.dart';
 import 'package:siputri_mobile/features/detail_buku/bloc/detail_buku_bloc.dart';
+import 'package:siputri_mobile/features/detail_buku/bloc/favorit_tambah_bloc.dart';
 import 'package:siputri_mobile/features/detail_buku/bloc/kembalikan_buku_bloc.dart';
 import 'package:siputri_mobile/features/detail_buku/bloc/pinjam_buku_bloc.dart';
 import 'package:siputri_mobile/features/detail_buku/bloc/ulasan_kamu_bloc.dart';
@@ -301,13 +302,14 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                   children: [
                                     _buildStatItem(
                                       Icons.chat_bubble_outline,
-                                      '0',
+                                      state.detailBukuModel.jumlahUlasan
+                                          .toString(),
                                       Colors.orange,
                                     ),
                                     _verticalDivider(),
                                     _buildStatItem(
                                       Icons.description,
-                                      '0',
+                                      book.jumlahBuku > 0 ? "0" : "1",
                                       Colors.blue,
                                     ),
                                     _verticalDivider(),
@@ -318,15 +320,23 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                     ),
                                     _verticalDivider(),
                                     Row(
-                                      children: const [
+                                      children: [
                                         Icon(
                                           Icons.check_circle,
-                                          color: Colors.teal,
+                                          color:
+                                              book.jumlahBuku > 0
+                                                  ? Colors.teal
+                                                  : Colors.grey.shade600,
                                         ),
                                         SizedBox(width: 4),
                                         Text(
-                                          '1 Tersedia',
-                                          style: TextStyle(color: Colors.teal),
+                                          '${book.jumlahBuku} Tersedia',
+                                          style: TextStyle(
+                                            color:
+                                                book.jumlahBuku > 0
+                                                    ? Colors.teal
+                                                    : Colors.grey.shade600,
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -499,19 +509,36 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                   //     child: const Icon(Icons.share, color: Colors.black),
                   //   ),
                   // ),
-                  Positioned(
-                    top: 20,
-                    right: 16,
-                    child: FloatingActionButton(
-                      mini: true,
-                      backgroundColor: Colors.white,
-                      heroTag: 'favorite',
-                      onPressed: () {
-                        // Fungsi favorite di sini
-                      },
-                      child: Icon(
-                        book.favorit ? Icons.favorite : Icons.favorite_border,
-                        color: book.favorit ? Colors.red : Colors.black,
+                  BlocListener<FavoritTambahBloc, FavoritState>(
+                    listener: (context, state) {
+                      if (state is FavoritSuccess) {
+                        context.read<DetailBukuBloc>().add(
+                          GetDetailBuku(id: book.idBuku.toString()),
+                        );
+                      }
+                    },
+                    child: Positioned(
+                      top: 20,
+                      right: 16,
+                      child: BlocBuilder<FavoritTambahBloc, FavoritState>(
+                        builder: (context, state) {
+                          return FloatingActionButton(
+                            mini: true,
+                            backgroundColor: Colors.white,
+                            heroTag: 'favorite',
+                            onPressed: () {
+                              context.read<FavoritTambahBloc>().add(
+                                PostFavoritEvent(idBuku: book.idBuku),
+                              );
+                            },
+                            child: Icon(
+                              book.favorit
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color: book.favorit ? Colors.red : Colors.black,
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ),

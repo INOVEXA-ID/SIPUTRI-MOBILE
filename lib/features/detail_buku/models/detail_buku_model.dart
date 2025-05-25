@@ -9,13 +9,19 @@ String detailBukuModelToJson(DetailBukuModel data) =>
 class DetailBukuModel {
   String message;
   Data data;
+  int jumlahUlasan;
 
-  DetailBukuModel({required this.message, required this.data});
+  DetailBukuModel({
+    required this.message,
+    required this.data,
+    required this.jumlahUlasan,
+  });
 
   factory DetailBukuModel.fromJson(Map<String, dynamic> json) =>
       DetailBukuModel(
         message: json["message"],
         data: Data.fromJson(json["data"]),
+        jumlahUlasan: json["jumlah_ulasan"],
       );
 
   Map<String, dynamic> toJson() => {"message": message, "data": data.toJson()};
