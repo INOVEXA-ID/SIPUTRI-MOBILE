@@ -1,14 +1,12 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:siputri_mobile/core/constants/api_constants.dart';
 import 'package:siputri_mobile/core/constants/color_constants.dart';
 import 'package:siputri_mobile/core/widgets/gap.dart';
-import 'package:siputri_mobile/features/home/components/book_card.dart';
 import 'package:siputri_mobile/features/search/bloc/buku_search_bloc.dart';
+import 'package:siputri_mobile/features/search/components/card_item_serach.dart';
 import 'package:siputri_mobile/features/search/components/empty.dart';
-import 'package:siputri_mobile/features/search/components/welcome.dart';
+import 'package:siputri_mobile/features/search/components/welcome.dart'; // Import CardItems favorit
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -38,11 +36,11 @@ class _SearchScreenState extends State<SearchScreen> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(70),
+          preferredSize: const Size.fromHeight(70),
           child: AppBar(
             backgroundColor: ColorConstants.primaryColor,
             title: Container(
-              margin: EdgeInsets.only(top: 12),
+              margin: const EdgeInsets.only(top: 12),
               height: 40,
               child: TextField(
                 controller: searchC,
@@ -71,63 +69,47 @@ class _SearchScreenState extends State<SearchScreen> {
         body: BlocBuilder<BukuSearchBloc, BukuSearchState>(
           builder: (context, state) {
             if (state is BukuSearchLoading) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             } else if (state is BukuSearchError) {
               return Center(child: Text('Error: ${state.message}'));
             } else if (state is BukuSearchLoaded) {
-              // searchC.text = state.searchVal.toString();
               if (state.buku.data.isEmpty) {
-                return EmptySearch();
+                return const EmptySearch();
               } else {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Gap(Y: 2),
-                    Expanded(
-                      child: RefreshIndicator(
-                        onRefresh: () {
-                          return Future.delayed(const Duration(seconds: 1));
-                        },
-                        child: GridView.builder(
-                          shrinkWrap: true,
-                          physics: const BouncingScrollPhysics(),
-                          scrollDirection: Axis.vertical,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 10,
-                          ),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 15,
-                                mainAxisSpacing: 15,
-                                childAspectRatio: 0.67,
-                              ),
-                          itemCount: state.buku.data.length,
-                          itemBuilder: (context, index) {
-                            final book = state.buku.data[index];
-                            return InkWell(
-                              // onTap:
-                              //     () => Navigator.pushNamed(
-                              //       context,
-                              //       AppRouter.pdfRenderPage,
-                              //     ),
-                              child: BookCard(
-                                title: book.judul,
-                                description: book.deskripsi,
-                                thumbnail:
-                                    "${ApiConstants.baseUrlImage}/${book.thumbnail}",
-                              ),
-                            );
-                          },
-                        ),
+                return ListView.builder(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 15,
+                    vertical: 10,
+                  ),
+                  itemCount: state.buku.data.length,
+                  itemBuilder: (context, index) {
+                    final book = state.buku.data[index];
+                    // Pastikan image tidak double domain, dan fallback jika null/kosong
+                    final thumbnailUrl = book.thumbnailUrl;
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: CardItemSearch(
+                        title: book.judul,
+                        penulis: book.penulis,
+                        rating: book.rating,
+                        description: book.deskripsi,
+                        image:
+                            (thumbnailUrl != null && thumbnailUrl.isNotEmpty)
+                                ? thumbnailUrl
+                                : 'assets/images/4.jpeg',
+                        jmlUlasan: 0, // Isi sesuai field jika ada di model
+                        jmlPembaca:
+                            0, // Isi sesuai field jika ada di model, // Kosongkan jika tidak ada
+                        jmlBuku: book.jumlahBuku,
+                        tersedia:
+                            book.jumlahBuku, // Atau field sesuai data tersedia
                       ),
-                    ),
-                  ],
+                    );
+                  },
                 );
               }
             } else {
-              return WelcomeSearch();
+              return const WelcomeSearch();
             }
           },
         ),

@@ -1,10 +1,60 @@
 import '../export/index.dart';
+import 'package:siputri_mobile/features/bookshelf/models/peminjaman_model.dart';
+import 'package:siputri_mobile/core/constants/api_constants.dart';
+import 'package:intl/intl.dart';
+
+// Fungsi util untuk menghasilkan full URL image
+String? getFullImageUrl(String? path) {
+  if (path == null || path.isEmpty) return null;
+  if (path.startsWith('http')) return path;
+  final base = ApiConstants.baseUrlImage;
+  if (base == null) return null;
+  if (path.startsWith('/')) {
+    return '$base$path';
+  } else {
+    return '$base/$path';
+  }
+}
 
 class CardItemRead extends StatelessWidget {
-  const CardItemRead({super.key});
+  final PeminjamanModel peminjaman;
+  const CardItemRead({super.key, required this.peminjaman});
 
   @override
   Widget build(BuildContext context) {
+    final buku = peminjaman.buku;
+    final thumbnailUrl = getFullImageUrl(buku.thumbnail);
+    debugPrint("URL gambar : $thumbnailUrl");
+
+    // Format tanggal
+    String formatTanggal(String tanggal) {
+      try {
+        return DateFormat(
+          'd MMMM yyyy',
+          'id_ID',
+        ).format(DateTime.parse(tanggal));
+      } catch (e) {
+        return tanggal;
+      }
+    }
+
+    // Hitung sisa waktu
+    String getSisaHari() {
+      try {
+        final akhir = DateTime.parse(peminjaman.tanggalPengembalian);
+        final sekarang = DateTime.now();
+        final selisih = akhir.difference(sekarang).inDays;
+        if (selisih < 0) {
+          return "(Lewat waktu)";
+        } else if (selisih == 0) {
+          return "(Hari ini)";
+        }
+        return "($selisih Hari lagi)";
+      } catch (e) {
+        return "";
+      }
+    }
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.grey.shade100,
@@ -20,16 +70,29 @@ class CardItemRead extends StatelessWidget {
               children: [
                 Expanded(
                   flex: 2,
-                  child: Container(
-                    height: 140,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      image: DecorationImage(
-                        image: AssetImage("assets/images/4.jpeg"),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child:
+                        thumbnailUrl != null
+                            ? Image.network(
+                              thumbnailUrl,
+                              fit: BoxFit.cover,
+                              height: 140,
+                              width: double.infinity,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  height: 140,
+                                  color: Colors.grey.shade300,
+                                  child: Icon(Icons.broken_image, size: 40),
+                                );
+                              },
+                            )
+                            : Image.asset(
+                              'assets/images/4.jpeg',
+                              fit: BoxFit.cover,
+                              height: 140,
+                              width: double.infinity,
+                            ),
                   ),
                 ),
                 Gap(X: 12),
@@ -39,13 +102,13 @@ class CardItemRead extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       MyText(
-                        title: "Automated Reasoning",
+                        title: buku.judul,
                         fontSize: 12,
                         maxLine: 2,
                         fontWeight: FontWeight.w600,
                       ),
                       MyText(
-                        title: "Budi Mulya, S.Si., M.Si.",
+                        title: buku.penulis,
                         fontSize: 11,
                         maxLine: 2,
                         color: Colors.grey.shade600,
@@ -71,8 +134,7 @@ class CardItemRead extends StatelessWidget {
                       ),
                       Gap(Y: 4),
                       MyText(
-                        title:
-                            "Added customizable button border style and shadow Added navbar RTL support (thanks to hennonoman) Added semantic label (thanks to tsinis)",
+                        title: buku.penerbit,
                         fontSize: 10,
                         maxLine: 5,
                         color: Colors.grey.shade600,
@@ -87,7 +149,7 @@ class CardItemRead extends StatelessWidget {
             Divider(thickness: 2, color: Colors.white),
             Gap(Y: 3),
             MyText(
-              title: "18 Mei 2025",
+              title: formatTanggal(peminjaman.tanggalPeminjaman),
               fontSize: 10,
               maxLine: 5,
               color: Colors.grey.shade600,
@@ -96,7 +158,8 @@ class CardItemRead extends StatelessWidget {
             Row(
               children: [
                 MyText(
-                  title: "Berlaku sampai 20 Mei 2025 23:59",
+                  title:
+                      "Berlaku sampai ${formatTanggal(peminjaman.tanggalPengembalian)} 23:59",
                   fontSize: 10,
                   maxLine: 5,
                   color: Colors.grey.shade600,
@@ -104,7 +167,7 @@ class CardItemRead extends StatelessWidget {
                 ),
                 Gap(X: 5),
                 MyText(
-                  title: "(2 Hari lagi)",
+                  title: getSisaHari(),
                   fontSize: 10,
                   maxLine: 5,
                   color: ColorConstants.primaryColor,
@@ -118,7 +181,10 @@ class CardItemRead extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 MyText(
-                  title: "Belum di baca",
+                  title:
+                      peminjaman.status == "dipinjam"
+                          ? "Belum di baca"
+                          : peminjaman.status,
                   fontSize: 10,
                   maxLine: 5,
                   color: Colors.amber.shade800,
@@ -126,10 +192,12 @@ class CardItemRead extends StatelessWidget {
                 ),
                 Material(
                   borderOnForeground: true,
+                  color: Colors.transparent,
                   child: InkWell(
                     onTap: () {
-                      debugPrint("Baca");
+                      debugPrint("Baca ${buku.judul}");
                     },
+                    borderRadius: BorderRadius.circular(8),
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.green,
