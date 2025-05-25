@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:siputri_mobile/core/constants/api_constants.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 
@@ -122,22 +123,22 @@ class _PDFRenderScreenState extends State<PDFRenderScreen> {
               }
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.bookmark),
-            onPressed: () {
-              _saveLastPage(_currentPage);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Halaman disimpan!')),
-              );
-            },
-          ),
+          // IconButton(
+          //   icon: const Icon(Icons.bookmark),
+          //   onPressed: () {
+          //     _saveLastPage(_currentPage);
+          //     ScaffoldMessenger.of(context).showSnackBar(
+          //       const SnackBar(content: Text('Halaman disimpan!')),
+          //     );
+          //   },
+          // ),
         ],
       ),
       body: Column(
         children: [
           Expanded(
             child: SfPdfViewer.network(
-              widget.urlBuku,
+              "${ApiConstants.baseUrlImage}/${widget.urlBuku}",
               controller: _pdfController,
               onDocumentLoaded: _handleDocumentLoaded,
               onPageChanged: (details) {

@@ -4,9 +4,19 @@ import 'package:siputri_mobile/core/services/dio_client.dart';
 import 'package:siputri_mobile/features/auth/bloc/auth_bloc.dart';
 import 'package:siputri_mobile/features/auth/repositories/auth_repository.dart';
 import 'package:siputri_mobile/features/auth/screens/index.dart';
+import 'package:siputri_mobile/features/detail_buku/bloc/antrian_buku_bloc.dart';
+import 'package:siputri_mobile/features/detail_buku/bloc/batal_antrian_bloc.dart';
+import 'package:siputri_mobile/features/detail_buku/bloc/daftar_antrian_bloc.dart';
 import 'package:siputri_mobile/features/detail_buku/bloc/detail_buku_bloc.dart';
+import 'package:siputri_mobile/features/detail_buku/bloc/kembalikan_buku_bloc.dart';
+import 'package:siputri_mobile/features/detail_buku/bloc/pinjam_buku_bloc.dart';
 import 'package:siputri_mobile/features/detail_buku/bloc/ulasan_kamu_bloc.dart';
+import 'package:siputri_mobile/features/detail_buku/repositories/antrian_buku_repository.dart';
+import 'package:siputri_mobile/features/detail_buku/repositories/batal_antrian_repository.dart';
+import 'package:siputri_mobile/features/detail_buku/repositories/daftar_antrian_repository.dart';
 import 'package:siputri_mobile/features/detail_buku/repositories/detail_buku_repository.dart';
+import 'package:siputri_mobile/features/detail_buku/repositories/kembalikan_buku_repository.dart';
+import 'package:siputri_mobile/features/detail_buku/repositories/pinjam_buku_repository.dart';
 import 'package:siputri_mobile/features/detail_buku/repositories/ulasan_kamu_repository.dart';
 import 'package:siputri_mobile/features/detail_buku/screens/daftar_tunggu_buku.dart';
 import 'package:siputri_mobile/features/detail_buku/screens/detail_buku_screen.dart';
@@ -16,11 +26,12 @@ import 'package:siputri_mobile/features/detail_buku/detail_buku_screen.dart';
 import 'package:siputri_mobile/features/favorit/bloc/favorit_bloc.dart';
 import 'package:siputri_mobile/features/favorit/repositories/favorit_repository.dart';
 import 'package:siputri_mobile/features/home/bloc/buku_bloc.dart';
+import 'package:siputri_mobile/features/home/bloc/buku_dibaca_bloc.dart';
+import 'package:siputri_mobile/features/home/repositories/buku_dibaca_repository.dart';
 import 'package:siputri_mobile/features/home/repositories/buku_repository.dart';
 import 'package:siputri_mobile/features/home/screens/index.dart';
 import 'package:siputri_mobile/features/navigation/bloc/navigation_bloc.dart';
 import 'package:siputri_mobile/features/navigation/index.dart';
-import 'package:siputri_mobile/features/pdf_render/index.dart';
 import 'package:siputri_mobile/features/register/bloc/register_bloc.dart';
 import 'package:siputri_mobile/features/register/repositories/register_repository.dart';
 import 'package:siputri_mobile/features/register/screens/index.dart';
@@ -74,6 +85,12 @@ class AppRouter {
                   ),
                   BlocProvider(
                     create:
+                        (_) =>
+                            BukuDibacaBloc(BukuDibacaRepository(DioClient()))
+                              ..add(GetBukuDibacaEvent()),
+                  ),
+                  BlocProvider(
+                    create:
                         (context) =>
                             BukuSearchBloc(BukuSearchRepository(DioClient())),
                   ),
@@ -98,8 +115,16 @@ class AppRouter {
       // case pdfRenderPage:
       //   return MaterialPageRoute(builder: (context) => PDFRenderScreen());
       case daftarTungguBukuPage:
+        final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
-          builder: (context) => DaftarTungguBukuScreen(),
+          builder:
+              (context) => BlocProvider(
+                create:
+                    (context) =>
+                        DaftarAntrianBloc(DaftarAntrianRepository(DioClient()))
+                          ..add(DaftarAntrianEventLoad(args['idBuku'])),
+                child: DaftarTungguBukuScreen(),
+              ),
         );
       case registerScreen:
         return MaterialPageRoute(
@@ -107,6 +132,50 @@ class AppRouter {
               (context) => BlocProvider(
                 create: (_) => RegisterBloc(RegisterRepository(DioClient())),
                 child: RegisterScreen(),
+              ),
+        );
+      case detailBukuPage:
+        final args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+          builder:
+              (context) => MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                    create:
+                        (_) =>
+                            DetailBukuBloc(DetailBukuRepository(DioClient()))
+                              ..add(GetDetailBuku(id: args['id'])),
+                  ),
+                  BlocProvider(
+                    create:
+                        (_) =>
+                            UlasanKamuBloc(UlasanKamuRepository(DioClient()))
+                              ..add(GetUlasanKamu(id: args['id'])),
+                  ),
+                  BlocProvider(
+                    create:
+                        (_) =>
+                            PinjamBukuBloc(PinjamBukuRepository(DioClient())),
+                  ),
+                  BlocProvider(
+                    create:
+                        (_) => KembalikanBukuBloc(
+                          KembalikanBukuRepository(DioClient()),
+                        ),
+                  ),
+                  BlocProvider(
+                    create:
+                        (_) =>
+                            AntrianBukuBloc(AntrianBukuRepository(DioClient())),
+                  ),
+                  BlocProvider(
+                    create:
+                        (_) => BatalAntrianBloc(
+                          BatalAntrianRepository(DioClient()),
+                        ),
+                  ),
+                ],
+                child: BookDetailScreen(),
               ),
         );
       default:

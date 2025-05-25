@@ -1,13 +1,25 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:siputri_mobile/core/config/app_router.dart';
 import 'package:siputri_mobile/core/constants/api_constants.dart';
 import 'package:siputri_mobile/core/constants/color_constants.dart';
+import 'package:siputri_mobile/core/utils/date_format.dart';
 import 'package:siputri_mobile/core/widgets/gap.dart';
+import 'package:siputri_mobile/core/widgets/my_text.dart';
+import 'package:siputri_mobile/features/detail_buku/bloc/antrian_buku_bloc.dart';
+import 'package:siputri_mobile/features/detail_buku/bloc/batal_antrian_bloc.dart';
+import 'package:siputri_mobile/features/detail_buku/bloc/daftar_antrian_bloc.dart';
 import 'package:siputri_mobile/features/detail_buku/bloc/detail_buku_bloc.dart';
+import 'package:siputri_mobile/features/detail_buku/bloc/kembalikan_buku_bloc.dart';
+import 'package:siputri_mobile/features/detail_buku/bloc/pinjam_buku_bloc.dart';
 import 'package:siputri_mobile/features/detail_buku/bloc/ulasan_kamu_bloc.dart';
+import 'package:siputri_mobile/features/detail_buku/components/first_btn.dart';
+import 'package:siputri_mobile/features/detail_buku/components/ulasan_global.dart';
 import 'package:siputri_mobile/features/detail_buku/components/ulasan_kamu.dart';
 import 'package:siputri_mobile/features/detail_buku/components/write_review.dart';
+import 'package:siputri_mobile/features/detail_buku/models/detail_buku_model.dart';
 import 'package:siputri_mobile/features/pdf_render/index.dart';
 
 class BookDetailScreen extends StatefulWidget {
@@ -18,11 +30,9 @@ class BookDetailScreen extends StatefulWidget {
 }
 
 class _BookDetailScreenState extends State<BookDetailScreen> {
-  bool isBorrowed = false;
-  bool isWaitingBook = false;
   bool _isExpanded = false;
 
-  void dialogPinjamBuku(BuildContext context) {
+  void dialogPinjamBuku(BuildContext context, VoidCallback onConfirm) {
     showDialog(
       context: context,
       builder:
@@ -35,11 +45,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                 child: Text('Tidak'),
               ),
               ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context); // Tutup dialog
-                  isBorrowed = !isBorrowed;
-                  setState(() {});
-                },
+                onPressed: onConfirm,
                 child: Text(
                   'Ya',
                   style: TextStyle(color: ColorConstants.primaryColor),
@@ -50,7 +56,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
     );
   }
 
-  void showReturnBookDialog(BuildContext context) {
+  void showReturnBookDialog(BuildContext context, VoidCallback onConfirm) {
     showDialog(
       context: context,
       builder:
@@ -62,19 +68,13 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                 onPressed: () => Navigator.pop(context), // Batal
                 child: Text('Tidak'),
               ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context); // Tutup dialog
-                  // Tambahkan logika pengembalian buku di sini
-                },
-                child: Text('Ya'),
-              ),
+              ElevatedButton(onPressed: onConfirm, child: Text('Ya')),
             ],
           ),
     );
   }
 
-  void dialogDaftarTunggu(BuildContext context) {
+  void dialogDaftarTunggu(BuildContext context, VoidCallback onConfirm) {
     showDialog(
       context: context,
       builder:
@@ -86,15 +86,25 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                 onPressed: () => Navigator.pop(context), // Batal
                 child: Text('Tidak'),
               ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context); // Tutup dialog
-                  // Tambahkan logika pengembalian buku di sini
-                  isWaitingBook = !isWaitingBook;
-                  setState(() {});
-                },
-                child: Text('Ya'),
+              ElevatedButton(onPressed: onConfirm, child: Text('Ya')),
+            ],
+          ),
+    );
+  }
+
+  void dialogBatalDaftarTunggu(BuildContext context, VoidCallback onConfirm) {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text('Warning!'),
+            content: Text('Apakah anda ingin membatalkan daftar tunggu ?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context), // Batal
+                child: Text('Tidak'),
               ),
+              ElevatedButton(onPressed: onConfirm, child: Text('Ya')),
             ],
           ),
     );
@@ -236,156 +246,57 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                 const SizedBox(height: 24),
 
                                 // Tombol Pinjam Buku
-                                if (book.jumlahBuku == 1)
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        flex: 1,
-                                        child: ElevatedButton.icon(
-                                          onPressed: () {
-                                            if (!isBorrowed) {
-                                              dialogPinjamBuku(context);
-                                            } else {
-                                              // setState(() {
-                                              //   isBorrowed = !isBorrowed;
-                                              // });
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder:
-                                                      (context) =>
-                                                          PDFRenderScreen(
-                                                            urlBuku: book.path,
-                                                          ),
-                                                ),
-                                              );
-                                            }
-                                          },
-                                          icon: Icon(
-                                            isBorrowed
-                                                ? Icons.menu_book_rounded
-                                                : Icons.amp_stories_outlined,
-                                            color: Colors.white,
-                                          ),
-                                          label: Text(
-                                            isBorrowed ? 'Baca' : 'Pinjam Buku',
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          style: ElevatedButton.styleFrom(
-                                            padding: const EdgeInsets.symmetric(
-                                              vertical: 14,
-                                            ),
-                                            backgroundColor:
-                                                isBorrowed
-                                                    ? Colors.green
-                                                    : Colors.blue,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      isBorrowed ? Gap(X: 12) : Container(),
-                                      isBorrowed
-                                          ? InkWell(
-                                            onTap: () {
-                                              showReturnBookDialog(context);
-                                            },
-                                            child: SizedBox(
-                                              width: 50,
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(
-                                                  8.0,
-                                                ),
-                                                child: Icon(
-                                                  Icons.more_vert,
-                                                  size: 30,
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                          : Container(),
-                                    ],
-                                  ),
-                                if (book.jumlahBuku == 0)
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        flex: 1,
-                                        child: ElevatedButton.icon(
-                                          onPressed: () {
-                                            // if (isWaitingBook) {
-                                            //   Navigator.pushNamed(
-                                            //     context,
-                                            //     AppRouter.daftarTungguBukuPage,
-                                            //   );
-                                            // } else {
-                                            dialogDaftarTunggu(context);
-                                            // }
-                                          },
-                                          icon: Icon(
-                                            isWaitingBook
-                                                ? Icons
-                                                    .library_add_check_rounded
-                                                : Icons.add_to_photos_rounded,
-                                            color: Colors.white,
-                                          ),
-                                          label: Text(
-                                            isWaitingBook
-                                                ? "Dalam Daftar Tunggu"
-                                                : "Daftar Tunggu",
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          style: ElevatedButton.styleFrom(
-                                            padding: const EdgeInsets.symmetric(
-                                              vertical: 14,
-                                            ),
-                                            backgroundColor:
-                                                isWaitingBook
-                                                    ? Colors.green
-                                                    : ColorConstants.textC,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Gap(X: 12),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.pushNamed(
-                                            context,
-                                            AppRouter.daftarTungguBukuPage,
-                                          );
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          padding: const EdgeInsets.all(
-                                            13,
-                                          ), // Atur sesuai ukuran ikon
-                                          backgroundColor: ColorConstants.textC,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              12,
-                                            ),
-                                          ),
-                                        ),
-                                        child: Icon(
-                                          Icons.timer,
-                                          color: Colors.white,
-                                          size: 25,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                if ((!book.statusDipinjam &&
+                                        book.jumlahBuku > 0) ||
+                                    (book.statusDipinjam &&
+                                        book.jumlahBuku == 0))
+                                  firstBtn(book, context),
 
+                                // Tombol Daftar Tunggu
+                                if (!book.statusDipinjam &&
+                                    book.jumlahBuku == 0)
+                                  secondBtn(context, book),
+                                if ((!book.statusDipinjam &&
+                                        book.jumlahBuku == 0 &&
+                                        book.statusDipinjam) ||
+                                    (book.statusDipinjam &&
+                                        book.jumlahBuku == 0))
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Gap(Y: 10),
+                                      MyText(
+                                        title: "Peminjaman Anda",
+                                        fontSize: 13,
+                                      ),
+                                      Gap(Y: 4),
+                                      MyText(
+                                        title:
+                                            book
+                                                .peminjaman!
+                                                .tanggalPeminjaman
+                                                .dateReadable,
+                                      ),
+                                      Row(
+                                        children: [
+                                          MyText(
+                                            title:
+                                                "Berlaku sampai ${book.peminjaman?.tanggalPengembalian.dateReadable}",
+                                            fontSize: 11,
+                                          ),
+                                          Gap(X: 7),
+                                          MyText(
+                                            title:
+                                                book.peminjaman!.durasiTersisa
+                                                    .toString(),
+                                            fontSize: 11,
+                                            color: Colors.lightBlue,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 const SizedBox(height: 24),
                                 // Statistik cepat
                                 Row(
@@ -548,7 +459,13 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                         ),
                                       ),
                                       const SizedBox(height: 12),
-                                      _buildUlasanSection(),
+                                      // _buildUlasanSection(),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          bottom: 5,
+                                        ),
+                                        child: UlasanGlobal(),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -608,6 +525,229 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
           }
         },
       ),
+    );
+  }
+
+  Row secondBtn(BuildContext context, Data book) {
+    return Row(
+      children: [
+        BlocListener<AntrianBukuBloc, AntrianBukuState>(
+          listener: (context, state) {
+            if (state is AntrianBukuSuccess) {
+              context.read<DetailBukuBloc>().add(
+                GetDetailBuku(id: book.idBuku.toString()),
+              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(state.message)));
+            } else if (state is AntrianBukuError) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(state.message)));
+            }
+          },
+          child: BlocListener<BatalAntrianBloc, BatalAntrianState>(
+            listener: (context, stateBatal) {
+              if (stateBatal is BatalAntrianSuccess) {
+                context.read<DetailBukuBloc>().add(
+                  GetDetailBuku(id: book.idBuku.toString()),
+                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text(stateBatal.message)));
+              } else if (stateBatal is BatalAntrianError) {
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text(stateBatal.message)));
+              }
+            },
+            child: Expanded(
+              flex: 1,
+              child: BlocBuilder<AntrianBukuBloc, AntrianBukuState>(
+                builder: (context, state) {
+                  return BlocBuilder<BatalAntrianBloc, BatalAntrianState>(
+                    builder: (context, stateBatal) {
+                      return ElevatedButton.icon(
+                        onPressed: () {
+                          if (book.statusMengantri) {
+                            dialogBatalDaftarTunggu(context, () {
+                              context.read<BatalAntrianBloc>().add(
+                                BatalAntrian(idBuku: book.idBuku.toString()),
+                              );
+                              Navigator.pop(context);
+                            });
+                          } else {
+                            dialogDaftarTunggu(context, () {
+                              context.read<AntrianBukuBloc>().add(
+                                PostAntrianBukuEvent(
+                                  idBuku: book.idBuku.toString(),
+                                ),
+                              );
+                              Navigator.pop(context);
+                            });
+                          }
+                        },
+                        icon: Icon(
+                          (book.statusMengantri)
+                              ? Icons.library_add_check_rounded
+                              : Icons.add_to_photos_rounded,
+                          color: Colors.white,
+                        ),
+                        label: Text(
+                          (book.statusMengantri)
+                              ? "Dalam Daftar Tunggu"
+                              : "Daftar Tunggu",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          backgroundColor:
+                              (book.statusMengantri)
+                                  ? Colors.green
+                                  : ColorConstants.textC,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+        Gap(X: 12),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.pushNamed(
+              context,
+              AppRouter.daftarTungguBukuPage,
+              arguments: {'idBuku': book.idBuku.toString()},
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.all(13), // Atur sesuai ukuran ikon
+            backgroundColor: ColorConstants.textC,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          child: Icon(Icons.timer, color: Colors.white, size: 25),
+        ),
+      ],
+    );
+  }
+
+  Widget firstBtn(Data book, BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          flex: 1,
+          child: BlocListener<PinjamBukuBloc, PinjamBukuState>(
+            listener: (context, state) {
+              if (state is PinjamBukuLoaded) {
+                context.read<DetailBukuBloc>().add(
+                  GetDetailBuku(id: book.idBuku.toString()),
+                );
+              } else if (state is PinjamBukuFailed) {
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text(state.message)));
+              }
+            },
+            child: BlocBuilder<PinjamBukuBloc, PinjamBukuState>(
+              builder: (context, state) {
+                return ElevatedButton.icon(
+                  onPressed:
+                      state is PinjamBukuLoading
+                          ? null
+                          : () {
+                            if (!book.statusDipinjam && book.jumlahBuku > 0) {
+                              dialogPinjamBuku(context, () {
+                                context.read<PinjamBukuBloc>().add(
+                                  PinjamBuku(idBuku: book.idBuku.toString()),
+                                );
+                                Navigator.pop(context);
+                              });
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) =>
+                                          PDFRenderScreen(urlBuku: book.path),
+                                ),
+                              );
+                            }
+                          },
+                  icon: Icon(
+                    book.statusDipinjam
+                        ? Icons.menu_book_rounded
+                        : Icons.amp_stories_outlined,
+                    color: Colors.white,
+                  ),
+                  label: Text(
+                    state is PinjamBukuLoading
+                        ? "Loading..."
+                        : book.statusDipinjam
+                        ? 'Baca'
+                        : 'Pinjam Buku',
+                    style: const TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    backgroundColor:
+                        book.statusDipinjam ? Colors.green : Colors.blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+        book.statusDipinjam ? Gap(X: 12) : Container(),
+        book.statusDipinjam
+            ? BlocListener<KembalikanBukuBloc, KembalikanBukuState>(
+              listener: (context, state) {
+                if (state is KembalikanBukuError) {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(state.message)));
+                } else if (state is KembalikanBukuSuccess) {
+                  context.read<DetailBukuBloc>().add(
+                    GetDetailBuku(id: book.idBuku.toString()),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Buku berhasil dikembalikan")),
+                  );
+                }
+              },
+              child: InkWell(
+                onTap: () {
+                  showReturnBookDialog(context, () {
+                    context.read<KembalikanBukuBloc>().add(
+                      KembalikanBuku(idBuku: book.idBuku.toString()),
+                    );
+                    Navigator.pop(context);
+                  });
+                },
+                child: SizedBox(
+                  width: 50,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(Icons.more_vert, size: 30),
+                  ),
+                ),
+              ),
+            )
+            : Container(),
+      ],
     );
   }
 }
